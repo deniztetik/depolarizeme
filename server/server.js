@@ -3,6 +3,7 @@ var app = express();
 var path = require("path");
 var bodyParser = require("body-parser");
 var routes = require("./routes.js");
+// var util = require("./server-util.js")
 
 app.use(bodyParser.json());
 
@@ -13,6 +14,7 @@ app.use(function(req, res, next) {
 })
 
 app.use(express.static('client'))
+app.use('/assets', express.static('assets'))
 app.use(bodyParser.json())
 var rootPath = path.normalize(__dirname + "/..");
 

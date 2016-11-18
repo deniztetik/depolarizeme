@@ -1,31 +1,55 @@
 import React from 'react'
 import ChatText from './ChatText.jsx'
-import ChatMessage from './ChatMessage.jsx'
+import ChatInput from './ChatInput.jsx'
 
 class Chat extends React.Component {
   constructor(props) {
-    super(props) 
+    super(props)
     this.state = {
-      messages: []
+      messages: [],
+      userInterval: null,
+      messagesInterval: null
     }
   }
 
   componentDidMount() {
     this.getMessages();
+    this.checkUser();
+    window.addEventListener("beforeunload", (e) => {
+      alert(e.target)
+      e.preventDefault()
+      this.exitChat().bind(this)
+      return e.returnValue = "narf"
+    })
+  }
+
+  checkUser() {
+    var userCheckIntervalId = setInterval(() => {
+      $.get("/users/"+this.props.params.remoteUser, (data, err) => {
+        if (err !== "success") console.error(err)
+        if (!data.username) {
+          this.setState({messages: this.state.messages.concat([{body: "Your conversation partner has disconnected..."}])})
+          clearInterval(this.state.userInterval);
+          clearInterval(this.state.messagesInterval);
+        }
+      })
+    }, 10000);
+    this.setState({userInterval: userCheckIntervalId})
   }
 
   getMessages() {
-    setInterval(() => {
+    var getMessageIntervalId = setInterval(() => {
       $.get("/chats/"+this.props.params.localUser, (data, err) => {
-        if (err) {
-          console.log(err)
-        } 
+        if (err !== "success") {
+          console.error(err)
+        }
         if (data) {
           this.setState({messages: data})
           console.log("response from server: ", data)
         }
       })
     }, 3000)
+    this.setState({messagesInterval: getMessageIntervalId})
   }
 
   postMessage(messageBody) {
@@ -54,11 +78,27 @@ class Chat extends React.Component {
     $text.value = ''
   }
 
+  exitChat() {
+    $.ajax({
+      method: "DELETE",
+      url: "/users/"+this.props.params.localUser
+    }).then((data) => {
+      console.log(data);
+    }).catch((err) => {
+      console.error(err);
+    })
+  }
+
   render() {
     return (
-      <div>
-        <ChatText localUser={this.props.params.localUser} party={this.props.params.party} messages={this.state.messages}/>
-        <ChatMessage handleSubmit={this.handleNewMessageSubmit.bind(this)}/>
+      <div className="chat-container">
+        <ChatText
+          localUser={this.props.params.localUser}
+          party={this.props.params.party}
+          messages={this.state.messages}/>
+        <ChatInput
+          handleSubmit={this.handleNewMessageSubmit.bind(this)}
+          destroySession={this.exitChat.bind(this)}/>
       </div>
     )
   }

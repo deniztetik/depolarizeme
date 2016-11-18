@@ -23,6 +23,24 @@ module.exports = function(app) {
     })
   })
 
+  app.get('/users/:user', (req, res) => {
+    var params = req.url.split('/');
+    var user = params.pop();
+    User.findOne({username: user}, (err, user) => {
+      if (err) {
+        console.error(err);
+        res.status(500);
+        res.send("Database lookup failed.")
+      }
+      if (user) res.send(user);
+      else {
+        res.status(200);
+        res.send({})
+      }
+    })
+
+  })
+
   app.get('/users/:party/:user', (req, res) => {
     var params = req.url.split('/');
     var user = params.pop();
@@ -32,8 +50,8 @@ module.exports = function(app) {
     //find current user in db.
     User.findOne({username: user}, (err, user) => {
       if (err) {
-        console.error("error retrieving current user.", err); 
-        res.status(400); 
+        console.error("error retrieving current user.", err);
+        res.status(500);
         res.send("Internal database error.")}
       else {
         // query current user for connections.
@@ -68,12 +86,12 @@ module.exports = function(app) {
                 User.update({username: user.username}, {connectedTo: remoteUser.username}, {multi: false}, (err, numAffected) => {
                   if(err) {'error updating local user docs: ', console.error(err)}
                 })
-                // send remote user in response. 
+                // send remote user in response.
                 res.status(200);
                 res.send(remoteUser.username);
               }
             }
-          })          
+          })
         }
       }
     })
@@ -108,5 +126,26 @@ module.exports = function(app) {
       }
     })
   })
-  
+
+  app.delete('/users/:user', (req, res) => {
+    var currentUser = req.url.split('/').pop();
+    //remove user from db.
+    //disconnect remote user.
+    User.findOneAndRemove({username: currentUser}, (err, foundUser) => {
+      if (err) console.error(err);
+      if (foundUser) {
+        User.update({connectedTo: foundUser.username}, {connectedTo: null}, {multi: false}, (err, numAffected) => {
+          if (err) {
+            res.status(500)
+            res.send("error updating remote user docs.")
+          } else {
+            res.status(203);
+            res.send(currentUser+" was removed from database.")
+          }
+        })
+      }
+    })
+    console.log("you did a delet on: ", currentUser);
+  })
+
 }

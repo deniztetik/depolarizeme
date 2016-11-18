@@ -17,23 +17,20 @@ class ChatText extends React.Component {
 
   render() {
 
-    var localStyles = {
-      backgroundColor: this.props.party === "democrat" ? "red" : "blue"
-    }
-
-    var remoteStyles = {
-      backgroundColor: localStyles.backgroundColor === "blue" ? "red" : "blue"
-    }
-
     return (
-      <div style={ {height: "200px"} }>
+      <div className="chat-text-container" style={ {height: "200px"} }>
        <div>Chat space</div>
        {
         this.state.messages.map((message, idx) => {
           if (message.author === this.props.localUser) {
-            return <div style={localStyles} key={idx}>{message.body}</div>
+            return <div
+              className={this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican"}
+              key={idx}><span>{message.author+": "}</span>{message.body}</div>
+          } else if (message.author) {
+            return <div className={this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican"}
+              key={idx}><span>{message.author+": "}</span>{message.body}</div>
           } else {
-            return <div style={remoteStyles} key={idx}>{message.body}</div>
+            return <div className="chat-text-message-announcement" key={idx}>{message.body}</div>
           }
         })
       }

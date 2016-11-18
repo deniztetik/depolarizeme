@@ -34,24 +34,34 @@ class PartyChooser extends React.Component {
         <div className="jumbotron">
           <div className="container">
             <div>
-              <h1>Depolarize Me</h1>
+              <h1><span className="dep">Dep</span><span className="olarize">olarize</span> <span className="me">Me</span></h1>
             </div>
             <div>
-              <p>The USA is politically polarized. Most of the people we know share our views. Want to chat with the other side?</p>
-            </div>
-            <div>
-              <h3>Choose your party</h3>
-            </div>
+    					<p>The USA is polarized. Most of the people we know share our views. Want to chat with the other side?</p>
+    				</div>
           </div>
-          <div className="button-left">
-            <button>
-              <Link to={"/waiting/democrat/" + this.state.localUser}><img src="http://www.clipartkid.com/images/64/democratic-donkey-image-cF24Aj-clipart.jpeg" height="100" width="100" />Democrat</Link>
-            </button>
-          </div>
-          <div className="button-right">
-            <button>
-              <Link to={"/waiting/republican/" + this.state.localUser}><img src="http://voteforthepresidentonline.com/wp-content/uploads/2016/03/GOP-Elephant.jpeg" height="100" width="150" />Republican</Link>
-            </button>
+          <div className="image-container">
+            <div className="donkey">
+                <img className="image-donkey" src="assets/donkey-silhouette-black-small.jpg"></img>
+                <div className="button-left">
+                  <Link to={"/waiting/democrat/" + this.state.localUser} style={{color:'black', textDecoration:'none'}}>
+                    <button className="myButton-left">
+                      <span>Democrat</span>
+                    </button>
+                  </Link>
+                </div>
+            </div>
+            <span className="choosecommand-text">Choose your party</span>
+            <div className="elephant">
+                <img className="image-elephant" src="assets/elephant-silhouette-black-small.png"></img>
+                <div className="button-right">
+                  <Link to={"/waiting/republican/" + this.state.localUser} style={{color:'black', textDecoration:'none'}}>
+                    <button className="myButton-right">
+                      <span>Republican</span>
+                    </button>
+                  </Link>
+                </div>
+            </div>
           </div>
         </div>
       </div>
