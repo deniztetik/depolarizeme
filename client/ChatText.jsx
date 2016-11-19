@@ -1,4 +1,6 @@
 import React from 'react'
+import ScrollArea from 'react-scrollbar'
+import MessageList from './MessageList.jsx'
 
 class ChatText extends React.Component {
   constructor(props) {
@@ -16,25 +18,20 @@ class ChatText extends React.Component {
   }
 
   render() {
-
     return (
-      <div className="chat-text-container" style={ {height: "200px"} }>
-       <div>Chat space</div>
-       {
-        this.state.messages.map((message, idx) => {
-          if (message.author === this.props.localUser) {
-            return <div
-              className={this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican"}
-              key={idx}><span>{message.author+": "}</span>{message.body}</div>
-          } else if (message.author) {
-            return <div className={this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican"}
-              key={idx}><span>{message.author+": "}</span>{message.body}</div>
-          } else {
-            return <div className="chat-text-message-announcement" key={idx}>{message.body}</div>
-          }
-        })
-      }
-      </div>
+      <ScrollArea
+        speed={0.8}
+        className="area"
+        contentClassName="content"
+        horizontal={false}
+        style={{ height: 200 }}
+        >
+        <MessageList
+          messages={this.state.messages}
+          party={this.props.party}
+          localUser={this.props.localUser}
+        />
+      </ScrollArea>
     )
   }
 

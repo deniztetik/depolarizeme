@@ -16,10 +16,9 @@ class Chat extends React.Component {
     this.getMessages();
     this.checkUser();
     window.addEventListener("beforeunload", (e) => {
-      alert(e.target)
       e.preventDefault()
       this.exitChat().bind(this)
-      return e.returnValue = "narf"
+      return e.returnValue = ""
     })
   }
 
@@ -28,7 +27,7 @@ class Chat extends React.Component {
       $.get("/users/"+this.props.params.remoteUser, (data, err) => {
         if (err !== "success") console.error(err)
         if (!data.username) {
-          this.setState({messages: this.state.messages.concat([{body: "Your conversation partner has disconnected..."}])})
+          this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected..."}]).reverse()})
           clearInterval(this.state.userInterval);
           clearInterval(this.state.messagesInterval);
         }
@@ -44,7 +43,7 @@ class Chat extends React.Component {
           console.error(err)
         }
         if (data) {
-          this.setState({messages: data})
+          this.setState({messages: data.reverse()})
           console.log("response from server: ", data)
         }
       })
@@ -78,7 +77,8 @@ class Chat extends React.Component {
     $text.value = ''
   }
 
-  exitChat() {
+  exitChat(e) {
+    if (e) {e.preventDefault();}
     $.ajax({
       method: "DELETE",
       url: "/users/"+this.props.params.localUser
@@ -92,13 +92,13 @@ class Chat extends React.Component {
   render() {
     return (
       <div className="chat-container">
+        <ChatInput
+          handleSubmit={this.handleNewMessageSubmit.bind(this)}
+          destroySession={this.exitChat.bind(this)}/>
         <ChatText
           localUser={this.props.params.localUser}
           party={this.props.params.party}
           messages={this.state.messages}/>
-        <ChatInput
-          handleSubmit={this.handleNewMessageSubmit.bind(this)}
-          destroySession={this.exitChat.bind(this)}/>
       </div>
     )
   }

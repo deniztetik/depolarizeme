@@ -60,7 +60,7 @@ module.exports = function(app) {
           //if found, respond with connected user.
           res.status(200)
           res.send(user.connectedTo);
-        } else {  // user must not be connected already.
+        } else if(user) {  // user must not be connected already.
           console.log('found no connections for current user.  Querying database.')
           //pull from active users from other party.
           User.find({party: otherParty}, (err, userConnections) => {
@@ -92,7 +92,12 @@ module.exports = function(app) {
               }
             }
           })
+        } else {
+          console.error("server error!");
+          res.status(500);
+          res.send("miscommunication between server and database.")
         }
+
       }
     })
     // res.send('you hit the /users/... endpoint!  Good job.')

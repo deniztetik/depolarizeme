@@ -164,22 +164,23 @@
 
 /* chat text component styles */
 
-.chat-text-container {
-
-}
-
 .chat-text-message-democrat {
+	display: flex;
 	background-color: #84b3ff;
 	border-radius: 5px;
 	padding: 3px;
 	margin: 2px;
+	justify-content: flex-start;
 }
 
 .chat-text-message-republican {
+	display: flex;
 	background-color: #ff8484;
 	border-radius: 5px;
 	padding: 3px;
 	margin: 2px;
+	justify-content: flex-start;
+	flex-flow: row-reverse nowrap;
 }
 
 .chat-text-message-announcement {

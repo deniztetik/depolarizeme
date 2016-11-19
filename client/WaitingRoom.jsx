@@ -43,7 +43,7 @@ class WaitingRoom extends React.Component {
       $.get("/users/"+this.props.params.party+"/"+ this.state.localUser, (data, err) => {
         if (err) {
           console.log(err)
-        } 
+        }
         if (data && data !== "no active users found.") {
           this.setState({remoteUser: data})
           console.log("List of possible user connections: ", data)
@@ -57,12 +57,15 @@ class WaitingRoom extends React.Component {
     return (
       <div>
         { this.state.resolved ? <div><Link to={"/chat/"+this.props.params.party+"/"+this.state.localUser+"/"+this.state.remoteUser}>request resolved</Link></div> :
-        <div>Please wait.  We are connecting you to another user.</div>
+          <div>
+            <div>Please wait.  We are connecting you to another user.</div>
+            <img src="/assets/spinner.gif"></img>
+          </div>
         }
       </div>
     )
   }
-  
+
 }
 
 export default WaitingRoom
