@@ -43,8 +43,7 @@ class Chat extends React.Component {
           console.error(err)
         }
         if (data) {
-          this.setState({messages: data.reverse()})
-          console.log("response from server: ", data)
+          this.setState({messages: data})
         }
       })
     }, 3000)

@@ -53,7 +53,7 @@ class PartyChooser extends React.Component {
             </div>
             <span className="choosecommand-text">Choose your party</span>
             <div className="elephant">
-                <img className="image-elephant" src="assets/elephant-silhouette-black-small.png"></img>
+                <img className="image-elephant" src="assets/elephant-silhouette-black-small.jpg"></img>
                 <div className="button-right">
                   <Link to={"/waiting/republican/" + this.state.localUser} style={{color:'black', textDecoration:'none'}}>
                     <button className="myButton-right">

@@ -7,7 +7,7 @@
 	color: #000000;
 	font-family: sans-serif;
 	font-size: 18px;
-	font-size: 1.8rem;
+	font-size: 2.5rem;
 	line-height: 1.5;
 	font-weight: lighter;
 }
@@ -15,7 +15,7 @@
 	color: #FFFFFF;
 	font-family: sans-serif;
 	font-size: 18px;
-	font-size: 1.8rem;
+	font-size: 2.5rem;
 	line-height: 1.5;
 	font-weight: normal;
 	border-radius:10px;
@@ -27,7 +27,7 @@
 	color: #000000;
 	font-family: sans-serif;
 	font-size: 18px;
-	font-size: 1.8rem;
+	font-size: 2.5rem;
 	line-height: 1.5;
 	font-weight: lighter;
 }
@@ -36,7 +36,7 @@
 	color: #E0162B;
 	font-family: sans-serif;
 	font-size: 18px;
-	font-size: 1.8rem;
+	font-size: 2.5rem;
 	line-height: 1.5;
 	font-weight: normal;
 }
@@ -46,6 +46,7 @@
 	margin-top: 100px;
 	font-family: sans-serif;
 	font-weight: lighter;
+	padding-top: 15px;
 }
 
 .jumbotron .container p {
@@ -61,6 +62,7 @@
 	padding-right: 50px;
 	padding-left: 50px;
 	margin-top: 0px;
+	outline: none;
 
 }
 
@@ -69,6 +71,7 @@
 	padding-left: 50px;
 	padding-right: 50px;
 	margin-top: 0px;
+	outline: none;
 
 }
 
@@ -83,11 +86,12 @@
 	border:1px solid #476e9e;
 	display:inline-block;
 	cursor:pointer;
-	color:#000000;
+	color:#476e9e;
 	font-family:Arial;
 	font-size:19px;
 	padding:12px 37px;
 	text-decoration:none;
+	outline: none;
 }
 .myButton-left:hover {
 	background-color:#476e9e;
@@ -109,11 +113,12 @@
 	border:1px solid #f93b3b;
 	display:inline-block;
 	cursor:pointer;
-	color:#000000;
+	color:#f93b3b;
 	font-family:Arial;
 	font-size:19px;
 	padding:12px 37px;
 	text-decoration:none;
+	outline: none;
 }
 .myButton-right:hover {
 	background-color:#f93b3b;
@@ -144,7 +149,8 @@
 .image-donkey {
 	object-fit: cover;
 	height: 40px;
-	width: 40px;
+	width: 26px;
+	padding-bottom: 10px;
 }
 
 .elephant {
@@ -160,27 +166,33 @@
 	object-fit: cover;
 	height: 40px;
 	width: 40px;
+	padding-bottom: 9px;
 }
 
 /* chat text component styles */
 
 .chat-text-message-democrat {
 	display: flex;
-	background-color: #84b3ff;
+	color: #000000;
+	background-color: #ffffff;
 	border-radius: 5px;
 	padding: 3px;
 	margin: 2px;
+	font-size: 1.0rem;
+	font-family: sans-serif;;
 	justify-content: flex-start;
 }
 
 .chat-text-message-republican {
 	display: flex;
-	background-color: #ff8484;
+	color: #000000;
+	background-color: #ffffff;
 	border-radius: 5px;
 	padding: 3px;
 	margin: 2px;
+	font-size: 1.0rem;
+	font-family: sans-serif;
 	justify-content: flex-start;
-	flex-flow: row-reverse nowrap;
 }
 
 .chat-text-message-announcement {
@@ -192,13 +204,16 @@
 /* chat component styles */
 
 .chat-container {
-	width: 100%;
+	width: 60%;
+	margin-right: 20%;
+	margin-left: 20%;
 }
 
 /* chat input component styles */
 
 .chat-input-container {
   width: 100%;
+
 }
 
 .chat-input-form {
@@ -208,12 +223,73 @@
 
 .chat-input-textarea {
   width: 90%;
+	height: 50px;
+	margin: 1%;
+	font-size: 1.0rem;
+	outline: none;
+	word-wrap: normal;
+
 }
 
 .chat-input-submit {
   width: 10%;
+	-moz-box-shadow: 0px 0px 0px 2px #476e9e;
+	-webkit-box-shadow: 0px 0px 0px 2px #476e9e;
+	box-shadow: 0px 0px 0px 2px #476e9e;
+	background-color:#FFFFFF;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	border:1px solid #476e9e;
+	display:inline-block;
+	cursor:pointer;
+	color:#476e9e;
+	font-family:Arial;
+	font-size:19px;
+	padding:12px 12px;
+	text-decoration:none;
+	outline: none;
+}
+.chat-input-submit:hover {
+	background-color:#476e9e;
+	color:#FFFFFF;
+}
+.chat-input-submit:active {
+	position:relative;
+	top:1px;
 }
 
 .chat-input-destroy {
-	background-color: red;
+	-moz-box-shadow: 0px 0px 0px 2px #FFFFFF;
+	-webkit-box-shadow: 0px 0px 0px 2px #FFFFFF;
+	box-shadow: 0px 0px 0px 2px #FFFFFF;
+	background-color:#FFFFFF;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	border:0px solid #FFFFFF;
+	display:inline-block;
+	cursor:pointer;
+	color:#f93b3b;
+	font-family:Arial;
+	font-size:16px;
+	padding:5px 5px;
+	text-decoration:none;
+	outline: none;
+}
+.chat-input-destroy:hover {
+	background-color:#f93b3b;
+	color:#FFFFFF;
+}
+.chat-input-destroy:active {
+	position:relative;
+	top:1px;
+}
+
+.chat-text-message-username-republican {
+	color: #f93b3b;
+}
+
+.chat-text-message-username-democrat {
+	color: #476e9e;
 }
