@@ -26,27 +26,6 @@ class ChatText extends React.Component {
   render() {
     return (
       <Infinite
-<<<<<<< HEAD
-        elementHeight={40}
-        containerHeight={250}
-        infiniteLoadBeginEdgeOffset={0}
-        displayBottomUpwards={true}
-      >
-      {
-        this.props.messages.map((message, idx) => {
-          if (message.author === this.props.localUser) {
-            return <div
-              className={this.state.localMessageClass}
-              key={idx}><span className={this.state.localUsernameClass} style={{ fontWeight: "bold" }} >{(this.props.party === "democrat" ? "Democrat: " :"Republican: ")}</span>{message.body}</div>
-          } else if (message.author) {
-            return <div className={this.state.remoteMessageClass}
-              key={idx}><span className={this.state.remoteUsernameClass} style={{ fontWeight: "bold" }}>{(this.props.party === "democrat" ? "Republican: " : "Democrat: ")}</span>{message.body}</div>
-          } else {
-            return <div className="chat-text-message-announcement" key={idx}>{message.body}</div>
-          }
-        })
-      }
-=======
         containerHeight={200}
         elementHeight={30}
         displayBottomUpwards={true}
@@ -70,7 +49,6 @@ class ChatText extends React.Component {
            }
          })
        }
->>>>>>> 8c2fc39a85351a9525deba52d6e43b586a6c3448
       </Infinite>
     )
   }

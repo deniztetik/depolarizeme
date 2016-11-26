@@ -27180,7 +27180,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _ChatText = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./ChatText.jsx\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var _ChatText = __webpack_require__(/*! ./ChatText.jsx */ 234);
 	
 	var _ChatText2 = _interopRequireDefault(_ChatText);
 	
@@ -27323,7 +27323,130 @@
 	exports.default = Chat;
 
 /***/ },
-/* 234 */,
+/* 234 */
+/*!*****************************!*\
+  !*** ./client/ChatText.jsx ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactInfinite = __webpack_require__(/*! react-infinite */ 235);
+	
+	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
+	
+	var _MessageItem = __webpack_require__(/*! ./MessageItem.jsx */ 253);
+	
+	var _MessageItem2 = _interopRequireDefault(_MessageItem);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ChatText = function (_React$Component) {
+	  _inherits(ChatText, _React$Component);
+	
+	  function ChatText(props) {
+	    _classCallCheck(this, ChatText);
+	
+	    var _this = _possibleConstructorReturn(this, (ChatText.__proto__ || Object.getPrototypeOf(ChatText)).call(this, props));
+	
+	    _this.state = {
+	      messages: _this.props.messages,
+	      localMessageClass: _this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
+	      localUsernameClass: _this.props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican",
+	      remoteMessageClass: _this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
+	      remoteUsernameClass: _this.props.party !== "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican"
+	
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(ChatText, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps, prevState) {
+	      if (this.props.messages.length > prevState.messages.length) {
+	        this.setState({ messages: prevProps.messages });
+	
+	        this.forceUpdate();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        _reactInfinite2.default,
+	        {
+	          containerHeight: 200,
+	          elementHeight: 30,
+	          displayBottomUpwards: true
+	        },
+	        this.props.messages.map(function (message, idx) {
+	          if (message.author === _this2.props.localUser) {
+	            return _react2.default.createElement(_MessageItem2.default, {
+	              party: _this2.props.party,
+	              message: message,
+	              key: idx
+	            });
+	          } else if (message.author) {
+	            return _react2.default.createElement(_MessageItem2.default, {
+	              party: _this2.props.party !== "democrat" ? "democrat" : "republican",
+	              message: message,
+	              key: idx
+	            });
+	          } else {
+	            return _react2.default.createElement(
+	              'div',
+	              { className: 'chat-text-message-announcement', key: idx },
+	              message.body
+	            );
+	          }
+	        })
+	      );
+	    }
+	
+	    // render() {
+	    //   return (
+	    //     <ScrollArea
+	    //       speed={0.8}
+	    //       className="area"
+	    //       contentClassName="content"
+	    //       horizontal={false}
+	    //       style={{ height: 200 }}
+	    //       >
+	    //       <MessageList
+	    //         messages={this.state.messages}
+	    //         party={this.props.party}
+	    //         localUser={this.props.localUser}
+	    //       />
+	    //     </ScrollArea>
+	    //   )
+	    // }
+	
+	  }]);
+	
+	  return ChatText;
+	}(_react2.default.Component);
+	
+	exports.default = ChatText;
+
+/***/ },
 /* 235 */
 /*!**************************************************!*\
   !*** ./~/react-infinite/build/react-infinite.js ***!
@@ -28765,6 +28888,43 @@
 	}(_react2.default.Component);
 	
 	exports.default = PartyChooser;
+
+/***/ },
+/* 251 */,
+/* 252 */,
+/* 253 */
+/*!********************************!*\
+  !*** ./client/MessageItem.jsx ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MessageItem = function MessageItem(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    {
+	      className: props.party === "democrat" ? "chat-text-message-democrat " + "message-item" : "chat-text-message-republican " + "message-item" },
+	    _react2.default.createElement(
+	      "span",
+	      { style: { fontWeight: "bold" } },
+	      props.party === "democrat" ? "Democrat: " : "Republican: "
+	    ),
+	    props.message.body
+	  );
+	};
+	
+	exports.default = MessageItem;
 
 /***/ }
 /******/ ]);
