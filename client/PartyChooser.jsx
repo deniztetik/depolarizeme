@@ -5,8 +5,9 @@ class PartyChooser extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      localUser: "",
-      remoteUser: "standin"
+      party: null,
+      localUser: null,
+      remoteUser: null
     }
   }
 
@@ -24,8 +25,51 @@ class PartyChooser extends React.Component {
     this.setState({localUser: usr});
   }
 
-  handleUsernameChange(e) {
-    this.setState({username: e.target.value})
+  enterWaitingRoom(username, party) {
+    var userData = {
+      username: username,
+      party: party
+    }
+    $.post({
+      url: "/users",
+      data: JSON.stringify(userData),
+      contentType: "application/json"
+    }).then((data) => {
+      console.log("User has been saved in database: ", data)
+    }).catch((err) => {
+      console.error(err)
+    })
+  }
+
+  getActiveUsers(party) {
+    // var otherParty = this.props.params.party === "democrat" ? "republican" : "democrat"
+    var intID = setInterval(() => {
+      if (this.state.remoteUser !== null) {
+        this.setState({resolved: true});
+        this.props.onConnect(this.state.localUser, this.state.remoteUser, this.state.party);
+        clearInterval(intID)
+        return 1;
+      }
+      $.get("/users/"+party+"/"+ this.state.localUser, (data, err) => {
+        if (err) {
+          console.log(err)
+        }
+        if (data && data !== "no active users found.") {
+          this.setState({remoteUser: data})
+          console.log("List of possible user connections: ", data)
+        }
+      })  
+    }, 3000)
+  }
+
+  handlePartySelection(choice) {
+    var userName = this.generateUsername();
+    this.setState({
+      localUser: userName,
+      party: choice
+    });
+    this.enterWaitingRoom(userName, choice);
+    this.getActiveUsers(choice);
   }
 
   render() {
@@ -44,22 +88,18 @@ class PartyChooser extends React.Component {
             <div className="donkey">
                 <img className="image-donkey" src="assets/donkey-silhouette-black-small.jpg"></img>
                 <div className="button-left">
-                  <Link to={"/waiting/democrat/" + this.state.localUser} style={{color:'black', textDecoration:'none'}}>
-                    <button className="myButton-left">
-                      <span>Democrat</span>
-                    </button>
-                  </Link>
+                  <button className="myButton-left" onClick={this.handlePartySelection.bind(this, "democrat")}>
+                    <span>Democrat</span>
+                  </button>
                 </div>
             </div>
             <span className="choosecommand-text">Choose your party</span>
             <div className="elephant">
                 <img className="image-elephant" src="assets/elephant-silhouette-black-small.jpg"></img>
                 <div className="button-right">
-                  <Link to={"/waiting/republican/" + this.state.localUser} style={{color:'black', textDecoration:'none'}}>
-                    <button className="myButton-right">
-                      <span>Republican</span>
-                    </button>
-                  </Link>
+                  <button className="myButton-right" onClick={this.handlePartySelection.bind(this, "republican")}>
+                    <span>Republican</span>
+                  </button>
                 </div>
             </div>
           </div>

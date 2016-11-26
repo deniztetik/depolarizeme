@@ -7,7 +7,7 @@ var ChatInput = ({handleSubmit, destroySession}) => (
       <input className="chat-input-textarea" type="text"></input>
       <input className="chat-input-submit" type="submit" value="Send"></input>
     </form>
-    <button className="chat-input-destroy" onClick={destroySession}><Link to={"/"}>Exit Chat</Link></button>
+    <button className="chat-input-destroy" onClick={destroySession}>Chat with another partner</button>
   </div>
 )
 

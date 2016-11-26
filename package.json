@@ -1,7 +1,7 @@
 {
-  "name": "react-test-environment",
+  "name": "depolarizeme",
   "version": "1.0.0",
-  "description": "Simple predictive text for React",
+  "description": "Chat app to talk with strangers of different opinions.",
   "main": "server/server.js",
   "scripts": {
     "start": "node server.js",
