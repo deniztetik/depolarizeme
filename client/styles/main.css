@@ -1,3 +1,11 @@
+.app-container {
+	display: flex;
+	flex-flow: column nowrap;
+	justify-content: space-between;
+	position: absolute;
+	min-height: 100%;
+}
+
 .jumbotron {
 	text-align: center;
 	padding-top: 100px;
@@ -288,10 +296,12 @@
 
 .chat-text-message-username-republican {
 	color: #f93b3b;
+	font-weight: bold;
 }
 
 .chat-text-message-username-democrat {
 	color: #476e9e;
+	font-weight: bold;
 }
 .chat-input-destroy:active {
 	position:relative;
@@ -302,4 +312,17 @@
 	max-width: 100px;
 	overflow-x: auto;
 	white-space: break-word;
+}
+
+.footer-container {
+	position: relative;
+	float: bottom;
+}
+
+.hidden {
+	display: none;
+}
+
+.disclaimer {
+	font-size: small;
 }

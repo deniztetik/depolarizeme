@@ -59,17 +59,21 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 178);
 	
-	var _reactInfinite = __webpack_require__(/*! react-infinite */ 235);
+	var _reactInfinite = __webpack_require__(/*! react-infinite */ 233);
 	
 	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
 	
-	var _Chat = __webpack_require__(/*! ./Chat.jsx */ 233);
+	var _Chat = __webpack_require__(/*! ./Chat.jsx */ 246);
 	
 	var _Chat2 = _interopRequireDefault(_Chat);
 	
 	var _PartyChooser = __webpack_require__(/*! ./PartyChooser.jsx */ 250);
 	
 	var _PartyChooser2 = _interopRequireDefault(_PartyChooser);
+	
+	var _Footer = __webpack_require__(/*! ./Footer.jsx */ 251);
+	
+	var _Footer2 = _interopRequireDefault(_Footer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -118,7 +122,6 @@
 	        method: "DELETE",
 	        url: "/users/" + this.state.localUser
 	      }).then(function (data) {
-	        console.log(data);
 	        _this2.setState({
 	          party: null,
 	          localUser: null,
@@ -149,11 +152,7 @@
 	          scrollBottom: this.scrollBottom,
 	          exitChat: this.exitChat.bind(this)
 	        }) : _react2.default.createElement('div', null),
-	        _react2.default.createElement(
-	          'div',
-	          { className: 'footer' },
-	          'Some footer text here.  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
-	        )
+	        _react2.default.createElement(_Footer2.default, null)
 	      );
 	    }
 	  }]);
@@ -27163,291 +27162,6 @@
 
 /***/ },
 /* 233 */
-/*!*************************!*\
-  !*** ./client/Chat.jsx ***!
-  \*************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _ChatText = __webpack_require__(/*! ./ChatText.jsx */ 234);
-	
-	var _ChatText2 = _interopRequireDefault(_ChatText);
-	
-	var _ChatInput = __webpack_require__(/*! ./ChatInput.jsx */ 249);
-	
-	var _ChatInput2 = _interopRequireDefault(_ChatInput);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var Chat = function (_React$Component) {
-	  _inherits(Chat, _React$Component);
-	
-	  function Chat(props) {
-	    _classCallCheck(this, Chat);
-	
-	    var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this, props));
-	
-	    _this.state = {
-	      localUser: _this.props.localUser,
-	      remoteUser: _this.props.remoteUser,
-	      resolved: false,
-	      messages: [],
-	      userInterval: null,
-	      messagesInterval: null
-	    };
-	    return _this;
-	  }
-	
-	  _createClass(Chat, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var _this2 = this;
-	
-	      console.log('componentDidMount called!');
-	      if (this.props.localUser !== null && this.props.remoteUser !== null && !this.state.resolved) {
-	        this.getMessages();
-	        this.checkUser();
-	        this.setState({ resolved: true });
-	      }
-	      window.addEventListener("beforeunload", function (e) {
-	        e.preventDefault();
-	        _this2.props.exitChat().bind(_this2);
-	        return e.returnValue = "";
-	      });
-	      this.props.scrollBottom();
-	    }
-	  }, {
-	    key: 'checkUser',
-	    value: function checkUser() {
-	      var _this3 = this;
-	
-	      var userCheckIntervalId = setInterval(function () {
-	        $.get("/users/" + _this3.state.remoteUser, function (data, err) {
-	          if (err !== "success") console.error(err);
-	          if (!data.username) {
-	            _this3.setState({ messages: _this3.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
-	            clearInterval(_this3.state.userInterval);
-	            clearInterval(_this3.state.messagesInterval);
-	          }
-	        });
-	      }, 10000);
-	      this.setState({ userInterval: userCheckIntervalId });
-	    }
-	  }, {
-	    key: 'getMessages',
-	    value: function getMessages() {
-	      var _this4 = this;
-	
-	      var getMessageIntervalId = setInterval(function () {
-	        $.get("/chats/" + _this4.state.localUser, function (data, err) {
-	          if (err !== "success") {
-	            console.error(err);
-	          }
-	          if (data) {
-	            _this4.setState({ messages: data });
-	          }
-	        });
-	      }, 3000);
-	      this.setState({ messagesInterval: getMessageIntervalId });
-	    }
-	  }, {
-	    key: 'postMessage',
-	    value: function postMessage(messageBody) {
-	      var message = {
-	        users: [this.state.localUser, this.state.remoteUser],
-	        author: this.state.localUser,
-	        body: messageBody
-	      };
-	      $.post({
-	        url: "/chats",
-	        data: JSON.stringify(message),
-	        contentType: "application/json"
-	      }).then(function (data) {
-	        console.log(data);
-	      }).catch(function (err) {
-	        console.error(err);
-	      });
-	    }
-	  }, {
-	    key: 'handleNewMessageSubmit',
-	    value: function handleNewMessageSubmit(e) {
-	      e.preventDefault();
-	      var $text = e.target.childNodes[0];
-	      var messageText = $text.value;
-	      this.postMessage(messageText);
-	      this.setState({ messages: this.state.messages.concat([{
-	          body: messageText,
-	          author: this.state.localUser,
-	          seen: false,
-	          users: [this.state.localUser, this.state.remoteUser]
-	        }]) });
-	      $text.value = '';
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'chat-container' },
-	        _react2.default.createElement(_ChatText2.default, {
-	          localUser: this.state.localUser,
-	          party: this.props.party,
-	          messages: this.state.messages }),
-	        _react2.default.createElement(_ChatInput2.default, {
-	          handleSubmit: this.handleNewMessageSubmit.bind(this),
-	          destroySession: this.props.exitChat.bind(this) })
-	      );
-	    }
-	  }]);
-	
-	  return Chat;
-	}(_react2.default.Component);
-	
-	exports.default = Chat;
-
-/***/ },
-/* 234 */
-/*!*****************************!*\
-  !*** ./client/ChatText.jsx ***!
-  \*****************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactInfinite = __webpack_require__(/*! react-infinite */ 235);
-	
-	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
-	
-	var _MessageItem = __webpack_require__(/*! ./MessageItem.jsx */ 253);
-	
-	var _MessageItem2 = _interopRequireDefault(_MessageItem);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var ChatText = function (_React$Component) {
-	  _inherits(ChatText, _React$Component);
-	
-	  function ChatText(props) {
-	    _classCallCheck(this, ChatText);
-	
-	    var _this = _possibleConstructorReturn(this, (ChatText.__proto__ || Object.getPrototypeOf(ChatText)).call(this, props));
-	
-	    _this.state = {
-	      messages: _this.props.messages,
-	      localMessageClass: _this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
-	      localUsernameClass: _this.props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican",
-	      remoteMessageClass: _this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
-	      remoteUsernameClass: _this.props.party !== "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican"
-	
-	    };
-	    return _this;
-	  }
-	
-	  _createClass(ChatText, [{
-	    key: 'componentDidUpdate',
-	    value: function componentDidUpdate(prevProps, prevState) {
-	      if (this.props.messages.length > prevState.messages.length) {
-	        this.setState({ messages: prevProps.messages });
-	
-	        this.forceUpdate();
-	      }
-	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
-	
-	      return _react2.default.createElement(
-	        _reactInfinite2.default,
-	        {
-	          containerHeight: 200,
-	          elementHeight: 30,
-	          displayBottomUpwards: true
-	        },
-	        this.props.messages.map(function (message, idx) {
-	          if (message.author === _this2.props.localUser) {
-	            return _react2.default.createElement(_MessageItem2.default, {
-	              party: _this2.props.party,
-	              message: message,
-	              key: idx
-	            });
-	          } else if (message.author) {
-	            return _react2.default.createElement(_MessageItem2.default, {
-	              party: _this2.props.party !== "democrat" ? "democrat" : "republican",
-	              message: message,
-	              key: idx
-	            });
-	          } else {
-	            return _react2.default.createElement(
-	              'div',
-	              { className: 'chat-text-message-announcement', key: idx },
-	              message.body
-	            );
-	          }
-	        })
-	      );
-	    }
-	
-	    // render() {
-	    //   return (
-	    //     <ScrollArea
-	    //       speed={0.8}
-	    //       className="area"
-	    //       contentClassName="content"
-	    //       horizontal={false}
-	    //       style={{ height: 200 }}
-	    //       >
-	    //       <MessageList
-	    //         messages={this.state.messages}
-	    //         party={this.props.party}
-	    //         localUser={this.props.localUser}
-	    //       />
-	    //     </ScrollArea>
-	    //   )
-	    // }
-	
-	  }]);
-	
-	  return ChatText;
-	}(_react2.default.Component);
-	
-	exports.default = ChatText;
-
-/***/ },
-/* 235 */
 /*!**************************************************!*\
   !*** ./~/react-infinite/build/react-infinite.js ***!
   \**************************************************/
@@ -27459,13 +27173,13 @@
 	
 	var React = global.React || __webpack_require__(/*! react */ 1);
 	
-	__webpack_require__(/*! ./utils/establish-polyfills */ 236);
-	var scaleEnum = __webpack_require__(/*! ./utils/scaleEnum */ 239);
-	var infiniteHelpers = __webpack_require__(/*! ./utils/infiniteHelpers */ 240);
-	var _isFinite = __webpack_require__(/*! lodash.isfinite */ 245);
+	__webpack_require__(/*! ./utils/establish-polyfills */ 234);
+	var scaleEnum = __webpack_require__(/*! ./utils/scaleEnum */ 237);
+	var infiniteHelpers = __webpack_require__(/*! ./utils/infiniteHelpers */ 238);
+	var _isFinite = __webpack_require__(/*! lodash.isfinite */ 243);
 	
-	var preloadType = __webpack_require__(/*! ./utils/types */ 246).preloadType;
-	var checkProps = checkProps = __webpack_require__(/*! ./utils/checkProps */ 247);
+	var preloadType = __webpack_require__(/*! ./utils/types */ 244).preloadType;
+	var checkProps = checkProps = __webpack_require__(/*! ./utils/checkProps */ 245);
 	
 	var Infinite = React.createClass({
 	  displayName: 'Infinite',
@@ -27912,7 +27626,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 236 */
+/* 234 */
 /*!*************************************************************!*\
   !*** ./~/react-infinite/build/utils/establish-polyfills.js ***!
   \*************************************************************/
@@ -27928,15 +27642,15 @@
 	'use strict';
 	
 	if (!Object.assign) {
-	  Object.assign = __webpack_require__(/*! object-assign */ 237);
+	  Object.assign = __webpack_require__(/*! object-assign */ 235);
 	}
 	
 	if (!Array.isArray) {
-	  Array.isArray = __webpack_require__(/*! lodash.isarray */ 238);
+	  Array.isArray = __webpack_require__(/*! lodash.isarray */ 236);
 	}
 
 /***/ },
-/* 237 */
+/* 235 */
 /*!***************************************************!*\
   !*** ./~/react-infinite/~/object-assign/index.js ***!
   \***************************************************/
@@ -27984,7 +27698,7 @@
 
 
 /***/ },
-/* 238 */
+/* 236 */
 /*!***********************************!*\
   !*** ./~/lodash.isarray/index.js ***!
   \***********************************/
@@ -28173,7 +27887,7 @@
 
 
 /***/ },
-/* 239 */
+/* 237 */
 /*!***************************************************!*\
   !*** ./~/react-infinite/build/utils/scaleEnum.js ***!
   \***************************************************/
@@ -28186,7 +27900,7 @@
 	};
 
 /***/ },
-/* 240 */
+/* 238 */
 /*!*********************************************************!*\
   !*** ./~/react-infinite/build/utils/infiniteHelpers.js ***!
   \*********************************************************/
@@ -28194,8 +27908,8 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 	
-	var ConstantInfiniteComputer = __webpack_require__(/*! ../computers/constantInfiniteComputer.js */ 241);
-	var ArrayInfiniteComputer = __webpack_require__(/*! ../computers/arrayInfiniteComputer.js */ 243);
+	var ConstantInfiniteComputer = __webpack_require__(/*! ../computers/constantInfiniteComputer.js */ 239);
+	var ArrayInfiniteComputer = __webpack_require__(/*! ../computers/arrayInfiniteComputer.js */ 241);
 	var React = global.React || __webpack_require__(/*! react */ 1);
 	
 	function createInfiniteComputer(data, children) {
@@ -28241,7 +27955,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 241 */
+/* 239 */
 /*!**********************************************************************!*\
   !*** ./~/react-infinite/build/computers/constantInfiniteComputer.js ***!
   \**********************************************************************/
@@ -28257,7 +27971,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var InfiniteComputer = __webpack_require__(/*! ./infiniteComputer.js */ 242);
+	var InfiniteComputer = __webpack_require__(/*! ./infiniteComputer.js */ 240);
 	
 	var ConstantInfiniteComputer = (function (_InfiniteComputer) {
 	  _inherits(ConstantInfiniteComputer, _InfiniteComputer);
@@ -28306,7 +28020,7 @@
 	module.exports = ConstantInfiniteComputer;
 
 /***/ },
-/* 242 */
+/* 240 */
 /*!**************************************************************!*\
   !*** ./~/react-infinite/build/computers/infiniteComputer.js ***!
   \**************************************************************/
@@ -28389,7 +28103,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! ./~/process/browser.js */ 3)))
 
 /***/ },
-/* 243 */
+/* 241 */
 /*!*******************************************************************!*\
   !*** ./~/react-infinite/build/computers/arrayInfiniteComputer.js ***!
   \*******************************************************************/
@@ -28405,8 +28119,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var InfiniteComputer = __webpack_require__(/*! ./infiniteComputer.js */ 242),
-	    bs = __webpack_require__(/*! ../utils/binaryIndexSearch.js */ 244);
+	var InfiniteComputer = __webpack_require__(/*! ./infiniteComputer.js */ 240),
+	    bs = __webpack_require__(/*! ../utils/binaryIndexSearch.js */ 242);
 	
 	var ArrayInfiniteComputer = (function (_InfiniteComputer) {
 	  _inherits(ArrayInfiniteComputer, _InfiniteComputer);
@@ -28474,7 +28188,7 @@
 	module.exports = ArrayInfiniteComputer;
 
 /***/ },
-/* 244 */
+/* 242 */
 /*!***********************************************************!*\
   !*** ./~/react-infinite/build/utils/binaryIndexSearch.js ***!
   \***********************************************************/
@@ -28525,7 +28239,7 @@
 	};
 
 /***/ },
-/* 245 */
+/* 243 */
 /*!************************************!*\
   !*** ./~/lodash.isfinite/index.js ***!
   \************************************/
@@ -28579,7 +28293,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 246 */
+/* 244 */
 /*!***********************************************!*\
   !*** ./~/react-infinite/build/utils/types.js ***!
   \***********************************************/
@@ -28598,7 +28312,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 247 */
+/* 245 */
 /*!****************************************************!*\
   !*** ./~/react-infinite/build/utils/checkProps.js ***!
   \****************************************************/
@@ -28611,7 +28325,7 @@
 	'use strict';
 	
 	var React = global.React || __webpack_require__(/*! react */ 1);
-	var _isFinite = __webpack_require__(/*! lodash.isfinite */ 245);
+	var _isFinite = __webpack_require__(/*! lodash.isfinite */ 243);
 	
 	module.exports = function (props) {
 	  var rie = 'Invariant Violation: ';
@@ -28632,7 +28346,326 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 248 */,
+/* 246 */
+/*!*************************!*\
+  !*** ./client/Chat.jsx ***!
+  \*************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _ChatText = __webpack_require__(/*! ./ChatText.jsx */ 247);
+	
+	var _ChatText2 = _interopRequireDefault(_ChatText);
+	
+	var _ChatInput = __webpack_require__(/*! ./ChatInput.jsx */ 249);
+	
+	var _ChatInput2 = _interopRequireDefault(_ChatInput);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Chat = function (_React$Component) {
+	  _inherits(Chat, _React$Component);
+	
+	  function Chat(props) {
+	    _classCallCheck(this, Chat);
+	
+	    var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this, props));
+	
+	    _this.state = {
+	      localUser: _this.props.localUser,
+	      remoteUser: _this.props.remoteUser,
+	      resolved: false,
+	      messages: [],
+	      userInterval: null,
+	      messagesInterval: null
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(Chat, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      console.log('componentDidMount called!');
+	      if (this.props.localUser !== null && this.props.remoteUser !== null && !this.state.resolved) {
+	        this.getMessages();
+	        this.checkUser();
+	        this.setState({ resolved: true });
+	      }
+	      window.addEventListener("beforeunload", function (e) {
+	        e.preventDefault();
+	        _this2.props.exitChat().bind(_this2);
+	        return e.returnValue = "";
+	      });
+	      this.props.scrollBottom();
+	    }
+	  }, {
+	    key: 'checkUser',
+	    value: function checkUser() {
+	      var _this3 = this;
+	
+	      var userCheckIntervalId = setInterval(function () {
+	        $.get("/users/" + _this3.state.remoteUser, function (data, err) {
+	          if (err !== "success") console.error(err);
+	          if (!data.username) {
+	            _this3.setState({ messages: _this3.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
+	            clearInterval(_this3.state.userInterval);
+	            clearInterval(_this3.state.messagesInterval);
+	          }
+	        });
+	      }, 10000);
+	      this.setState({ userInterval: userCheckIntervalId });
+	    }
+	  }, {
+	    key: 'getMessages',
+	    value: function getMessages() {
+	      var _this4 = this;
+	
+	      var getMessageIntervalId = setInterval(function () {
+	        $.get("/chats/" + _this4.state.localUser, function (data, err) {
+	          if (err !== "success") {
+	            console.error(err);
+	          }
+	          if (data) {
+	            _this4.setState({ messages: data });
+	          }
+	        });
+	      }, 3000);
+	      this.setState({ messagesInterval: getMessageIntervalId });
+	    }
+	  }, {
+	    key: 'postMessage',
+	    value: function postMessage(messageBody) {
+	      var message = {
+	        users: [this.state.localUser, this.state.remoteUser],
+	        author: this.state.localUser,
+	        body: messageBody
+	      };
+	      $.post({
+	        url: "/chats",
+	        data: JSON.stringify(message),
+	        contentType: "application/json"
+	      }).then(function (data) {
+	        console.log(data);
+	      }).catch(function (err) {
+	        console.error(err);
+	      });
+	    }
+	  }, {
+	    key: 'handleNewMessageSubmit',
+	    value: function handleNewMessageSubmit(e) {
+	      e.preventDefault();
+	      var $text = e.target.childNodes[0];
+	      var messageText = $text.value;
+	      this.postMessage(messageText);
+	      this.setState({ messages: this.state.messages.concat([{
+	          body: messageText,
+	          author: this.state.localUser,
+	          seen: false,
+	          users: [this.state.localUser, this.state.remoteUser]
+	        }]) });
+	      $text.value = '';
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'chat-container' },
+	        _react2.default.createElement(_ChatText2.default, {
+	          localUser: this.state.localUser,
+	          party: this.props.party,
+	          messages: this.state.messages }),
+	        _react2.default.createElement(_ChatInput2.default, {
+	          handleSubmit: this.handleNewMessageSubmit.bind(this),
+	          destroySession: this.props.exitChat.bind(this) })
+	      );
+	    }
+	  }]);
+	
+	  return Chat;
+	}(_react2.default.Component);
+	
+	exports.default = Chat;
+
+/***/ },
+/* 247 */
+/*!*****************************!*\
+  !*** ./client/ChatText.jsx ***!
+  \*****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactInfinite = __webpack_require__(/*! react-infinite */ 233);
+	
+	var _reactInfinite2 = _interopRequireDefault(_reactInfinite);
+	
+	var _MessageItem = __webpack_require__(/*! ./MessageItem.jsx */ 248);
+	
+	var _MessageItem2 = _interopRequireDefault(_MessageItem);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var ChatText = function (_React$Component) {
+	  _inherits(ChatText, _React$Component);
+	
+	  function ChatText(props) {
+	    _classCallCheck(this, ChatText);
+	
+	    var _this = _possibleConstructorReturn(this, (ChatText.__proto__ || Object.getPrototypeOf(ChatText)).call(this, props));
+	
+	    _this.state = {
+	      messages: _this.props.messages,
+	      localMessageClass: _this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
+	      localUsernameClass: _this.props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican",
+	      remoteMessageClass: _this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
+	      remoteUsernameClass: _this.props.party !== "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican"
+	
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(ChatText, [{
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate(prevProps, prevState) {
+	      if (this.props.messages.length > prevState.messages.length) {
+	        this.setState({ messages: prevProps.messages });
+	
+	        this.forceUpdate();
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        _reactInfinite2.default,
+	        {
+	          containerHeight: 200,
+	          elementHeight: 30,
+	          displayBottomUpwards: true
+	        },
+	        this.props.messages.map(function (message, idx) {
+	          if (message.author === _this2.props.localUser) {
+	            return _react2.default.createElement(_MessageItem2.default, {
+	              party: _this2.props.party,
+	              message: message,
+	              key: idx
+	            });
+	          } else if (message.author) {
+	            return _react2.default.createElement(_MessageItem2.default, {
+	              party: _this2.props.party !== "democrat" ? "democrat" : "republican",
+	              message: message,
+	              key: idx
+	            });
+	          } else {
+	            return _react2.default.createElement(
+	              'div',
+	              { className: 'chat-text-message-announcement', key: idx },
+	              message.body
+	            );
+	          }
+	        })
+	      );
+	    }
+	
+	    // render() {
+	    //   return (
+	    //     <ScrollArea
+	    //       speed={0.8}
+	    //       className="area"
+	    //       contentClassName="content"
+	    //       horizontal={false}
+	    //       style={{ height: 200 }}
+	    //       >
+	    //       <MessageList
+	    //         messages={this.state.messages}
+	    //         party={this.props.party}
+	    //         localUser={this.props.localUser}
+	    //       />
+	    //     </ScrollArea>
+	    //   )
+	    // }
+	
+	  }]);
+	
+	  return ChatText;
+	}(_react2.default.Component);
+	
+	exports.default = ChatText;
+
+/***/ },
+/* 248 */
+/*!********************************!*\
+  !*** ./client/MessageItem.jsx ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var MessageItem = function MessageItem(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    {
+	      className: props.party === "democrat" ? "chat-text-message-democrat " + "message-item" : "chat-text-message-republican " + "message-item" },
+	    _react2.default.createElement(
+	      "span",
+	      { className: props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican" },
+	      props.party === "democrat" ? "Democrat: " : "Republican: "
+	    ),
+	    props.message.body
+	  );
+	};
+	
+	exports.default = MessageItem;
+
+/***/ },
 /* 249 */
 /*!******************************!*\
   !*** ./client/ChatInput.jsx ***!
@@ -28747,9 +28780,7 @@
 	        url: "/users",
 	        data: JSON.stringify(userData),
 	        contentType: "application/json"
-	      }).then(function (data) {
-	        console.log("User has been saved in database: ", data);
-	      }).catch(function (err) {
+	      }).then(function (data) {}).catch(function (err) {
 	        console.error(err);
 	      });
 	    }
@@ -28772,7 +28803,6 @@
 	          }
 	          if (data && data !== "no active users found.") {
 	            _this2.setState({ remoteUser: data });
-	            console.log("List of possible user connections: ", data);
 	          }
 	        });
 	      }, 3000);
@@ -28890,12 +28920,10 @@
 	exports.default = PartyChooser;
 
 /***/ },
-/* 251 */,
-/* 252 */,
-/* 253 */
-/*!********************************!*\
-  !*** ./client/MessageItem.jsx ***!
-  \********************************/
+/* 251 */
+/*!***************************!*\
+  !*** ./client/Footer.jsx ***!
+  \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -28904,27 +28932,205 @@
 	  value: true
 	});
 	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	var _react = __webpack_require__(/*! react */ 1);
 	
 	var _react2 = _interopRequireDefault(_react);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var MessageItem = function MessageItem(props) {
-	  return _react2.default.createElement(
-	    "div",
-	    {
-	      className: props.party === "democrat" ? "chat-text-message-democrat " + "message-item" : "chat-text-message-republican " + "message-item" },
-	    _react2.default.createElement(
-	      "span",
-	      { style: { fontWeight: "bold" } },
-	      props.party === "democrat" ? "Democrat: " : "Republican: "
-	    ),
-	    props.message.body
-	  );
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	exports.default = MessageItem;
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Footer = function (_React$Component) {
+	  _inherits(Footer, _React$Component);
+	
+	  function Footer(props) {
+	    _classCallCheck(this, Footer);
+	
+	    var _this = _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).call(this, props));
+	
+	    _this.state = {
+	      hidden: true
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(Footer, [{
+	    key: "render",
+	    value: function render() {
+	      var _this2 = this;
+	
+	      return _react2.default.createElement(
+	        "div",
+	        { className: "footer-container" },
+	        _react2.default.createElement(
+	          "div",
+	          { className: "disclaimer" },
+	          "By using the Depolarize Me Web site, also called the Depme website, and/or related products and/or services (\"Depme\", \"Depolarize Me\", provided by Depme.com), you agree to the following terms: Do not use Depme if you are under 13. If you are under 18, use it only with a parent/guardian's permission. Do not transmit nudity, sexually harass anyone, publicize other peoples' private information, make statements that defame or libel anyone, violate intellectual property rights, use automated programs to start chats, or behave in any other inappropriate or illegal way on Depme. Understand that human behavior is fundamentally uncontrollable, that the people you encounter on Depme may not behave appropriately, and that they are solely responsible for their own behavior. Use Depme at your own peril. Disconnect if anyone makes you feel uncomfortable. You may be denied access to Depme for inappropriate behavior, or for any other reason. DEPME IS PROVIDED AS IS, AND TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW, IT IS PROVIDED WITHOUT ANY WARRANTY, EXPRESS OR IMPLIED, NOT EVEN A WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW, THE PROVIDER OF DEPME, AND ANY OTHER PERSON OR ENTITY ASSOCIATED WITH DEPME'S OPERATION, SHALL NOT BE HELD LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES ARISING FROM THE USE OF DEPME, OR ANY OTHER DAMAGES RELATED TO DEPME OF ANY KIND WHATSOEVER. By using Depme, you accept the practices outlined in Depme's ",
+	          _react2.default.createElement(
+	            "a",
+	            { style: { fontWeight: 'bold' }, onClick: function onClick() {
+	                _this2.setState({ hidden: !_this2.state.hidden });
+	              } },
+	            "PRIVACY POLICY and INFORMATION ABOUT THE USE OF COOKIES "
+	          ),
+	          " (updated 10-28-2016)."
+	        ),
+	        _react2.default.createElement(
+	          "div",
+	          { className: this.state.hidden ? "hidden" : "" },
+	          _react2.default.createElement(
+	            "h1",
+	            null,
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "Effective date:"
+	            ),
+	            _react2.default.createElement(
+	              "span",
+	              null,
+	              "=C2=A010/28/2016"
+	            )
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "This document is here to inform you about the privacy practices of the Depolarize Me, also called Depme, chat service (\"Depolarize Me\", \"Depme\", provided by ",
+	            _react2.default.createElement(
+	              "a",
+	              { href: "http://depme.com" },
+	              "depme.com"
+	            ),
+	            "), which are designed to protect your privacy to the maximum reasonable extent. By making use of Depme, you accept these practices. This document may be updated from time to time. When changes are made, the effective date at the top will be changed. This date is also noted on Depme's home page."
+	          ),
+	          _react2.default.createElement(
+	            "h3",
+	            null,
+	            "Chat privacy"
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "In general, messages are not stored indefinitely, but select messages may be read by a human being to improve Depme services or for other quality control purposes."
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "At the beginning of every chat, a record is made of the fact that a chat occurred between youand your chat partner. This record includes a timestamp, as well as IP address, and similar information for you and your chat partner. These records may be used for the purpose of tracking spammers, hackers, and others who pose harm to the site; and may also be used for law enforcement purposes; oranalyzed in aggregate to produce statistical data (e.g., average number ofchats started at different times of day). These records are typically stored for a limited time."
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Users are given an option to save the chat's log and share the link. Understand that=C2=A0",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "strangers can potentially tell other people anything you tell them,=C2=A0"
+	            ),
+	            "whether by sharing the log, or just by repeating what you said. Be careful what information you reveal to them."
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "The records Depme keeps may be shared with third parties for the purpose of law enforcement, to monitor and enforce compliance with Omegle's rules, or to improve Omegle's monitoring and enforcement processes."
+	          ),
+	          _react2.default.createElement(
+	            "h3",
+	            null,
+	            "Information made availableto other chat users"
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "In an Omegle text chat, only the following information is made available to other chat users:"
+	          ),
+	          _react2.default.createElement(
+	            "ul",
+	            null,
+	            _react2.default.createElement(
+	              "li",
+	              null,
+	              "Anything you say in the chat."
+	            ),
+	            _react2.default.createElement(
+	              "li",
+	              null,
+	              "Your chosen political affiliation and the political affiliation of your partner."
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "h3",
+	            null,
+	            "Use of cookies"
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Depme uses Google Analytics to track non-personally-identifying statistical information about site usage. Google provides a=C2=A0",
+	            _react2.default.createElement(
+	              "a",
+	              { href: "http://tools.google.com/dlpage/gaoptout?hl=en" },
+	              "browser add-on to opt out of Google Analytics"
+	            ),
+	            "."
+	          ),
+	          _react2.default.createElement(
+	            "h3",
+	            null,
+	            "Facebook integration"
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Depme can optionally be linked with a Facebook account to enable certain features. Currently, Facebook integration is used for the following purposes:"
+	          ),
+	          _react2.default.createElement(
+	            "ul",
+	            null,
+	            _react2.default.createElement(
+	              "li",
+	              null,
+	              "Omegle provides an option for publishing a chat log to your Facebook account."
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "The Facebook API allows Depme to access other information about you, such as your name and other personal details. However, Depme does=C2=A0",
+	            _react2.default.createElement(
+	              "strong",
+	              null,
+	              "not"
+	            ),
+	            "=C2=A0share, save, or make any use of this information."
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Depme does not share personal information about you with Facebook, except in order to perform actions you explicitly initiate. Use of Facebook is subject to=C2=A0",
+	            _react2.default.createElement(
+	              "a",
+	              { href: "https://www.facebook.com/about/privacy/" },
+	              "Facebook's privacy policy"
+	            ),
+	            "."
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Footer;
+	}(_react2.default.Component);
+	
+	exports.default = Footer;
 
 /***/ }
 /******/ ]);

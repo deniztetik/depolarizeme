@@ -35,7 +35,6 @@ class PartyChooser extends React.Component {
       data: JSON.stringify(userData),
       contentType: "application/json"
     }).then((data) => {
-      console.log("User has been saved in database: ", data)
     }).catch((err) => {
       console.error(err)
     })
@@ -56,9 +55,8 @@ class PartyChooser extends React.Component {
         }
         if (data && data !== "no active users found.") {
           this.setState({remoteUser: data})
-          console.log("List of possible user connections: ", data)
         }
-      })  
+      })
     }, 3000)
   }
 
