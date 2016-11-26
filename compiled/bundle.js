@@ -102,6 +102,17 @@
 	  }
 	
 	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      window.addEventListener("beforeunload", function (e) {
+	        e.preventDefault();
+	        _this2.exitChat.call(_this2);
+	        e.returnValue = "beforeunload fired.";
+	      });
+	    }
+	  }, {
 	    key: 'setUsers',
 	    value: function setUsers(newLocalUser, newRemoteUser, newParty) {
 	      this.setState({
@@ -113,20 +124,18 @@
 	  }, {
 	    key: 'exitChat',
 	    value: function exitChat(e) {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      if (e) {
 	        e.preventDefault();
 	      }
+	      console.log('exiting chat');
 	      $.ajax({
 	        method: "DELETE",
 	        url: "/users/" + this.state.localUser
 	      }).then(function (data) {
-	        _this2.setState({
-	          party: null,
-	          localUser: null,
-	          remoteUser: null
-	        });
+	        console.log("User " + _this3.state.localUser + " deleted from db.");
+	        _this3.setUsers(null, null, null);
 	      }).catch(function (err) {
 	        console.error(err);
 	      });
@@ -143,6 +152,9 @@
 	        'div',
 	        { className: 'app-container' },
 	        _react2.default.createElement(_PartyChooser2.default, {
+	          party: this.state.party,
+	          localUser: this.state.localUser,
+	          remoteUser: this.state.remoteUser,
 	          onConnect: this.setUsers.bind(this)
 	        }),
 	        this.state.party && this.state.localUser && this.state.remoteUser ? _react2.default.createElement(_Chat2.default, {
@@ -28389,8 +28401,6 @@
 	    var _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this, props));
 	
 	    _this.state = {
-	      localUser: _this.props.localUser,
-	      remoteUser: _this.props.remoteUser,
 	      resolved: false,
 	      messages: [],
 	      userInterval: null,
@@ -28402,33 +28412,39 @@
 	  _createClass(Chat, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      var _this2 = this;
-	
-	      console.log('componentDidMount called!');
-	      if (this.props.localUser !== null && this.props.remoteUser !== null && !this.state.resolved) {
+	      console.log("current chat state: ", this.state);
+	      if (this.props.localUser && this.props.remoteUser && !this.state.resolved) {
 	        this.getMessages();
 	        this.checkUser();
 	        this.setState({ resolved: true });
 	      }
-	      window.addEventListener("beforeunload", function (e) {
-	        e.preventDefault();
-	        _this2.props.exitChat().bind(_this2);
-	        return e.returnValue = "";
-	      });
 	      this.props.scrollBottom();
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.setState({
+	        resolved: false,
+	        messages: []
+	      });
+	      clearInterval(this.state.userInterval);
+	      clearInterval(this.state.messagesInterval);
+	      console.log("current chat state: ", this.state);
 	    }
 	  }, {
 	    key: 'checkUser',
 	    value: function checkUser() {
-	      var _this3 = this;
+	      var _this2 = this;
 	
 	      var userCheckIntervalId = setInterval(function () {
-	        $.get("/users/" + _this3.state.remoteUser, function (data, err) {
-	          if (err !== "success") console.error(err);
+	        $.get("/users/" + _this2.props.remoteUser, function (data, err) {
+	          if (data) {
+	            console.log("Connected user from server: ", data);
+	          }
 	          if (!data.username) {
-	            _this3.setState({ messages: _this3.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
-	            clearInterval(_this3.state.userInterval);
-	            clearInterval(_this3.state.messagesInterval);
+	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
+	            clearInterval(_this2.state.userInterval);
+	            clearInterval(_this2.state.messagesInterval);
 	          }
 	        });
 	      }, 10000);
@@ -28437,15 +28453,15 @@
 	  }, {
 	    key: 'getMessages',
 	    value: function getMessages() {
-	      var _this4 = this;
+	      var _this3 = this;
 	
 	      var getMessageIntervalId = setInterval(function () {
-	        $.get("/chats/" + _this4.state.localUser, function (data, err) {
+	        $.get("/chats/" + _this3.props.localUser, function (data, err) {
 	          if (err !== "success") {
 	            console.error(err);
 	          }
 	          if (data) {
-	            _this4.setState({ messages: data });
+	            _this3.setState({ messages: data });
 	          }
 	        });
 	      }, 3000);
@@ -28455,17 +28471,15 @@
 	    key: 'postMessage',
 	    value: function postMessage(messageBody) {
 	      var message = {
-	        users: [this.state.localUser, this.state.remoteUser],
-	        author: this.state.localUser,
+	        users: [this.props.localUser, this.props.remoteUser],
+	        author: this.props.localUser,
 	        body: messageBody
 	      };
 	      $.post({
 	        url: "/chats",
 	        data: JSON.stringify(message),
 	        contentType: "application/json"
-	      }).then(function (data) {
-	        console.log(data);
-	      }).catch(function (err) {
+	      }).then(function (data) {}).catch(function (err) {
 	        console.error(err);
 	      });
 	    }
@@ -28478,9 +28492,9 @@
 	      this.postMessage(messageText);
 	      this.setState({ messages: this.state.messages.concat([{
 	          body: messageText,
-	          author: this.state.localUser,
+	          author: this.props.localUser,
 	          seen: false,
-	          users: [this.state.localUser, this.state.remoteUser]
+	          users: [this.props.localUser, this.props.remoteUser]
 	        }]) });
 	      $text.value = '';
 	    }
@@ -28491,12 +28505,12 @@
 	        'div',
 	        { className: 'chat-container' },
 	        _react2.default.createElement(_ChatText2.default, {
-	          localUser: this.state.localUser,
+	          localUser: this.props.localUser,
 	          party: this.props.party,
 	          messages: this.state.messages }),
 	        _react2.default.createElement(_ChatInput2.default, {
 	          handleSubmit: this.handleNewMessageSubmit.bind(this),
-	          destroySession: this.props.exitChat.bind(this) })
+	          destroySession: this.props.exitChat })
 	      );
 	    }
 	  }]);
@@ -28743,14 +28757,7 @@
 	  function PartyChooser(props) {
 	    _classCallCheck(this, PartyChooser);
 	
-	    var _this = _possibleConstructorReturn(this, (PartyChooser.__proto__ || Object.getPrototypeOf(PartyChooser)).call(this, props));
-	
-	    _this.state = {
-	      party: null,
-	      localUser: null,
-	      remoteUser: null
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, (PartyChooser.__proto__ || Object.getPrototypeOf(PartyChooser)).call(this, props));
 	  }
 	
 	  _createClass(PartyChooser, [{
@@ -28764,14 +28771,9 @@
 	      return username;
 	    }
 	  }, {
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      var usr = this.generateUsername();
-	      this.setState({ localUser: usr });
-	    }
-	  }, {
 	    key: 'enterWaitingRoom',
 	    value: function enterWaitingRoom(username, party) {
+	      this.props.onConnect(username, this.props.remoteUser, this.props.party);
 	      var userData = {
 	        username: username,
 	        party: party
@@ -28789,20 +28791,21 @@
 	    value: function getActiveUsers(party) {
 	      var _this2 = this;
 	
+	      console.log("current user in getActiveUsers", this.props.localUser);
 	      // var otherParty = this.props.params.party === "democrat" ? "republican" : "democrat"
 	      var intID = setInterval(function () {
-	        if (_this2.state.remoteUser !== null) {
+	        if (_this2.props.remoteUser !== null) {
 	          _this2.setState({ resolved: true });
-	          _this2.props.onConnect(_this2.state.localUser, _this2.state.remoteUser, _this2.state.party);
+	          _this2.props.onConnect(_this2.props.localUser, _this2.props.remoteUser, _this2.props.party);
 	          clearInterval(intID);
 	          return 1;
 	        }
-	        $.get("/users/" + party + "/" + _this2.state.localUser, function (data, err) {
+	        $.get("/users/" + party + "/" + _this2.props.localUser, function (data, err) {
 	          if (err) {
 	            console.log(err);
 	          }
 	          if (data && data !== "no active users found.") {
-	            _this2.setState({ remoteUser: data });
+	            _this2.props.onConnect(_this2.props.localUser, data, party);
 	          }
 	        });
 	      }, 3000);
@@ -28811,10 +28814,7 @@
 	    key: 'handlePartySelection',
 	    value: function handlePartySelection(choice) {
 	      var userName = this.generateUsername();
-	      this.setState({
-	        localUser: userName,
-	        party: choice
-	      });
+	      console.log("username in HandlePartySelection: ", userName);
 	      this.enterWaitingRoom(userName, choice);
 	      this.getActiveUsers(choice);
 	    }

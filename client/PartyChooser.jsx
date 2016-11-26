@@ -4,11 +4,6 @@ import { Link } from 'react-router'
 class PartyChooser extends React.Component {
   constructor(props) {
     super(props)
-    this.state = {
-      party: null,
-      localUser: null,
-      remoteUser: null
-    }
   }
 
   generateUsername() {
@@ -20,12 +15,8 @@ class PartyChooser extends React.Component {
     return username
   }
 
-  componentDidMount() {
-    var usr = this.generateUsername()
-    this.setState({localUser: usr});
-  }
-
   enterWaitingRoom(username, party) {
+    this.props.onConnect(username, this.props.remoteUser, this.props.party)
     var userData = {
       username: username,
       party: party
@@ -41,20 +32,21 @@ class PartyChooser extends React.Component {
   }
 
   getActiveUsers(party) {
+    console.log("current user in getActiveUsers", this.props.localUser)
     // var otherParty = this.props.params.party === "democrat" ? "republican" : "democrat"
     var intID = setInterval(() => {
-      if (this.state.remoteUser !== null) {
+      if (this.props.remoteUser !== null) {
         this.setState({resolved: true});
-        this.props.onConnect(this.state.localUser, this.state.remoteUser, this.state.party);
+        this.props.onConnect(this.props.localUser, this.props.remoteUser, this.props.party);
         clearInterval(intID)
         return 1;
       }
-      $.get("/users/"+party+"/"+ this.state.localUser, (data, err) => {
+      $.get("/users/"+party+"/"+ this.props.localUser, (data, err) => {
         if (err) {
           console.log(err)
         }
         if (data && data !== "no active users found.") {
-          this.setState({remoteUser: data})
+          this.props.onConnect(this.props.localUser, data, party)
         }
       })
     }, 3000)
@@ -62,10 +54,7 @@ class PartyChooser extends React.Component {
 
   handlePartySelection(choice) {
     var userName = this.generateUsername();
-    this.setState({
-      localUser: userName,
-      party: choice
-    });
+    console.log("username in HandlePartySelection: ", userName)
     this.enterWaitingRoom(userName, choice);
     this.getActiveUsers(choice);
   }

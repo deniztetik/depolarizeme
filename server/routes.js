@@ -93,7 +93,7 @@ module.exports = function(app) {
             }
           })
         } else {
-          console.error("server error!");
+          console.error("server error");
           res.status(500);
           res.send("miscommunication between server and database.")
         }

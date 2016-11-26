@@ -6,8 +6,6 @@ class Chat extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      localUser:  this.props.localUser,
-      remoteUser: this.props.remoteUser,
       resolved: false,
       messages: [],
       userInterval: null,
@@ -16,24 +14,31 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    console.log('componentDidMount called!')
-    if (this.props.localUser !== null && this.props.remoteUser !== null && !this.state.resolved) {
+    console.log("current chat state: ", this.state)
+    if (this.props.localUser && this.props.remoteUser && !this.state.resolved) {
       this.getMessages();
       this.checkUser();
       this.setState({resolved: true});
     }
-    window.addEventListener("beforeunload", (e) => {
-      e.preventDefault()
-      this.props.exitChat().bind(this)
-      return e.returnValue = ""
-    })
     this.props.scrollBottom()
+  }
+
+  componentWillUnmount() {
+    this.setState({
+      resolved: false,
+      messages: [],
+    })
+    clearInterval(this.state.userInterval);
+    clearInterval(this.state.messagesInterval);
+    console.log("current chat state: ", this.state)
   }
 
   checkUser() {
     var userCheckIntervalId = setInterval(() => {
-      $.get("/users/"+this.state.remoteUser, (data, err) => {
-        if (err !== "success") console.error(err)
+      $.get("/users/"+this.props.remoteUser, (data, err) => {
+        if (data) {
+          console.log("Connected user from server: ", data)
+        }
         if (!data.username) {
           this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected..."}])})
           clearInterval(this.state.userInterval);
@@ -46,7 +51,7 @@ class Chat extends React.Component {
 
   getMessages() {
     var getMessageIntervalId = setInterval(() => {
-      $.get("/chats/"+this.state.localUser, (data, err) => {
+      $.get("/chats/"+this.props.localUser, (data, err) => {
         if (err !== "success") {
           console.error(err)
         }
@@ -60,8 +65,8 @@ class Chat extends React.Component {
 
   postMessage(messageBody) {
     var message = {
-      users: [this.state.localUser, this.state.remoteUser],
-      author: this.state.localUser,
+      users: [this.props.localUser, this.props.remoteUser],
+      author: this.props.localUser,
       body: messageBody
     }
     $.post({
@@ -69,7 +74,6 @@ class Chat extends React.Component {
       data: JSON.stringify(message),
       contentType: "application/json"
     }).then((data) => {
-      console.log(data)
     }).catch((err) => {
       console.error(err)
     })
@@ -82,9 +86,9 @@ class Chat extends React.Component {
     this.postMessage(messageText)
     this.setState({messages: this.state.messages.concat([{
       body: messageText,
-      author: this.state.localUser,
+      author: this.props.localUser,
       seen: false,
-      users: [this.state.localUser, this.state.remoteUser]
+      users: [this.props.localUser, this.props.remoteUser]
     }])})
     $text.value = ''
   }
@@ -93,12 +97,12 @@ class Chat extends React.Component {
     return (
       <div className="chat-container">
         <ChatText
-          localUser={this.state.localUser}
+          localUser={this.props.localUser}
           party={this.props.party}
           messages={this.state.messages}/>
         <ChatInput
           handleSubmit={this.handleNewMessageSubmit.bind(this)}
-          destroySession={this.props.exitChat.bind(this)}/>
+          destroySession={this.props.exitChat}/>
       </div>
     )
   }

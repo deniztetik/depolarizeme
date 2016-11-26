@@ -19,6 +19,14 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault()
+      this.exitChat.call(this)
+      e.returnValue = "beforeunload fired."
+    })
+  }
+
   setUsers(newLocalUser, newRemoteUser, newParty) {
     this.setState({
       localUser: newLocalUser,
@@ -29,15 +37,13 @@ class App extends React.Component {
 
   exitChat(e) {
     if (e) {e.preventDefault();}
+    console.log('exiting chat')
     $.ajax({
       method: "DELETE",
       url: "/users/"+this.state.localUser
     }).then((data) => {
-      this.setState({
-        party: null,
-        localUser: null,
-        remoteUser: null
-      })
+      console.log("User " + this.state.localUser + " deleted from db.")
+      this.setUsers(null, null, null)
     }).catch((err) => {
       console.error(err);
     })
@@ -51,6 +57,9 @@ class App extends React.Component {
     return (
       <div className="app-container">
         <PartyChooser
+          party={this.state.party}
+          localUser={this.state.localUser}
+          remoteUser={this.state.remoteUser}
           onConnect={this.setUsers.bind(this)}
         />
         { this.state.party && this.state.localUser && this.state.remoteUser ?
