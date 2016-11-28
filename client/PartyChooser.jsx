@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import SharingButtons from './SharingButtons.jsx'
 
 class PartyChooser extends React.Component {
   constructor(props) {
@@ -90,6 +91,7 @@ class PartyChooser extends React.Component {
                 </div>
             </div>
           </div>
+          <SharingButtons />
         </div>
       </div>
     )

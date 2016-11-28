@@ -7,6 +7,7 @@ class ChatText extends React.Component {
     super(props)
     this.state = {
       messages: this.props.messages,
+      messageHeights: [],
       localMessageClass:this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
       localUsernameClass: this.props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican",
       remoteMessageClass: this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
@@ -17,10 +18,20 @@ class ChatText extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.messages.length > prevState.messages.length) {
-      this.setState({messages: prevProps.messages})
-
+      this.setState({
+        messages: prevProps.messages,
+        messageHeights: this.getMessageHeights()
+      })
+      console.log(this.getMessageHeights())
       this.forceUpdate();
     }
+  }
+
+  getMessageHeights() {
+    var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'))
+    return $messages.map((message) => {
+      return message.clientHeight;
+    })
   }
 
   render() {
@@ -52,25 +63,6 @@ class ChatText extends React.Component {
       </Infinite>
     )
   }
-
-  // render() {
-  //   return (
-  //     <ScrollArea
-  //       speed={0.8}
-  //       className="area"
-  //       contentClassName="content"
-  //       horizontal={false}
-  //       style={{ height: 200 }}
-  //       >
-  //       <MessageList
-  //         messages={this.state.messages}
-  //         party={this.props.party}
-  //         localUser={this.props.localUser}
-  //       />
-  //     </ScrollArea>
-  //   )
-  // }
-
 }
 
 
