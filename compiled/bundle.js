@@ -71,7 +71,7 @@
 	
 	var _PartyChooser2 = _interopRequireDefault(_PartyChooser);
 	
-	var _Footer = __webpack_require__(/*! ./Footer.jsx */ 251);
+	var _Footer = __webpack_require__(/*! ./Footer.jsx */ 252);
 	
 	var _Footer2 = _interopRequireDefault(_Footer);
 	
@@ -28920,7 +28920,8 @@
 	exports.default = PartyChooser;
 
 /***/ },
-/* 251 */
+/* 251 */,
+/* 252 */
 /*!***************************!*\
   !*** ./client/Footer.jsx ***!
   \***************************/
