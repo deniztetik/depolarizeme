@@ -13,6 +13,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      buttonIsDisabled: false,
       party: null,
       localUser: null,
       remoteUser: null
@@ -44,6 +45,7 @@ class App extends React.Component {
     }).then((data) => {
       console.log("User " + this.state.localUser + " deleted from db.")
       this.setUsers(null, null, null)
+      this.toggleButton();
     }).catch((err) => {
       console.error(err);
     })
@@ -51,6 +53,10 @@ class App extends React.Component {
 
   scrollBottom() {
     $("body").animate({scrollTop: $(document).height()-$(window).height()})
+  }
+
+  toggleButton() {
+    this.setState({buttonIsDisabled: !this.state.buttonIsDisabled})
   }
 
   render() {
@@ -61,6 +67,8 @@ class App extends React.Component {
           localUser={this.state.localUser}
           remoteUser={this.state.remoteUser}
           onConnect={this.setUsers.bind(this)}
+          toggleButton={this.toggleButton.bind(this)}
+          buttonIsDisabled={this.state.buttonIsDisabled}
         />
         { this.state.party && this.state.localUser && this.state.remoteUser ?
         <Chat

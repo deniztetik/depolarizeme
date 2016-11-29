@@ -71,7 +71,7 @@
 	
 	var _PartyChooser2 = _interopRequireDefault(_PartyChooser);
 	
-	var _Footer = __webpack_require__(/*! ./Footer.jsx */ 251);
+	var _Footer = __webpack_require__(/*! ./Footer.jsx */ 252);
 	
 	var _Footer2 = _interopRequireDefault(_Footer);
 	
@@ -94,6 +94,7 @@
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
 	    _this.state = {
+	      buttonIsDisabled: false,
 	      party: null,
 	      localUser: null,
 	      remoteUser: null
@@ -136,6 +137,7 @@
 	      }).then(function (data) {
 	        console.log("User " + _this3.state.localUser + " deleted from db.");
 	        _this3.setUsers(null, null, null);
+	        _this3.toggleButton();
 	      }).catch(function (err) {
 	        console.error(err);
 	      });
@@ -144,6 +146,11 @@
 	    key: 'scrollBottom',
 	    value: function scrollBottom() {
 	      $("body").animate({ scrollTop: $(document).height() - $(window).height() });
+	    }
+	  }, {
+	    key: 'toggleButton',
+	    value: function toggleButton() {
+	      this.setState({ buttonIsDisabled: !this.state.buttonIsDisabled });
 	    }
 	  }, {
 	    key: 'render',
@@ -155,7 +162,9 @@
 	          party: this.state.party,
 	          localUser: this.state.localUser,
 	          remoteUser: this.state.remoteUser,
-	          onConnect: this.setUsers.bind(this)
+	          onConnect: this.setUsers.bind(this),
+	          toggleButton: this.toggleButton.bind(this),
+	          buttonIsDisabled: this.state.buttonIsDisabled
 	        }),
 	        this.state.party && this.state.localUser && this.state.remoteUser ? _react2.default.createElement(_Chat2.default, {
 	          party: this.state.party,
@@ -28736,7 +28745,7 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 178);
 	
-	var _SharingButtons = __webpack_require__(/*! ./SharingButtons.jsx */ 255);
+	var _SharingButtons = __webpack_require__(/*! ./SharingButtons.jsx */ 251);
 	
 	var _SharingButtons2 = _interopRequireDefault(_SharingButtons);
 	
@@ -28810,6 +28819,12 @@
 	  }, {
 	    key: 'handlePartySelection',
 	    value: function handlePartySelection(choice) {
+	      //if button is disabled, return error;
+	      if (this.props.buttonIsDisabled) {
+	        return 1;
+	      }
+	      //if button is enabled, disable and generate session.
+	      this.props.toggleButton();
 	      var userName = this.generateUsername();
 	      console.log("username in HandlePartySelection: ", userName);
 	      this.enterWaitingRoom(userName, choice);
@@ -28873,7 +28888,7 @@
 	                { className: 'button-left' },
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'myButton-left', onClick: this.handlePartySelection.bind(this, "democrat") },
+	                  { className: (this.props.buttonIsDisabled ? " disabled" : "") + " myButton-left", onClick: this.handlePartySelection.bind(this, "democrat") },
 	                  _react2.default.createElement(
 	                    'span',
 	                    null,
@@ -28896,7 +28911,7 @@
 	                { className: 'button-right' },
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'myButton-right', onClick: this.handlePartySelection.bind(this, "republican") },
+	                  { className: (this.props.buttonIsDisabled ? " disabled" : "") + " myButton-right", onClick: this.handlePartySelection.bind(this, "republican") },
 	                  _react2.default.createElement(
 	                    'span',
 	                    null,
@@ -28919,6 +28934,46 @@
 
 /***/ },
 /* 251 */
+/*!***********************************!*\
+  !*** ./client/SharingButtons.jsx ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SharingButtons = function SharingButtons(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    { className: "fb-share-button",
+	      "data-href": "https://www.depme.com",
+	      "data-layout": "button_count",
+	      "data-size": "small",
+	      "data-mobile-iframe": "true" },
+	    _react2.default.createElement(
+	      "a",
+	      { className: "fb-xfbml-parse-ignore",
+	        target: "_blank",
+	        href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.depme.com%2F&src=sdkpreparse"
+	      },
+	      "Share"
+	    )
+	  );
+	};
+	
+	exports.default = SharingButtons;
+
+/***/ },
+/* 252 */
 /*!***************************!*\
   !*** ./client/Footer.jsx ***!
   \***************************/
@@ -29129,49 +29184,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = Footer;
-
-/***/ },
-/* 252 */,
-/* 253 */,
-/* 254 */,
-/* 255 */
-/*!***********************************!*\
-  !*** ./client/SharingButtons.jsx ***!
-  \***********************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 1);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var SharingButtons = function SharingButtons(props) {
-	  return _react2.default.createElement(
-	    "div",
-	    { className: "fb-share-button",
-	      "data-href": "https://www.depme.com",
-	      "data-layout": "button_count",
-	      "data-size": "small",
-	      "data-mobile-iframe": "true" },
-	    _react2.default.createElement(
-	      "a",
-	      { className: "fb-xfbml-parse-ignore",
-	        target: "_blank",
-	        href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.depme.com%2F&src=sdkpreparse"
-	      },
-	      "Share"
-	    )
-	  );
-	};
-	
-	exports.default = SharingButtons;
 
 /***/ }
 /******/ ]);
