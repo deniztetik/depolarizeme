@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import SharingButtons from './SharingButtons.jsx'
 
 class PartyChooser extends React.Component {
   constructor(props) {
@@ -53,6 +54,10 @@ class PartyChooser extends React.Component {
   }
 
   handlePartySelection(choice) {
+    //if button is disabled, return error;
+    if (this.props.buttonIsDisabled) {return 1; }
+    //if button is enabled, disable and generate session.
+    this.props.toggleButton();
     var userName = this.generateUsername();
     console.log("username in HandlePartySelection: ", userName)
     this.enterWaitingRoom(userName, choice);
@@ -75,7 +80,7 @@ class PartyChooser extends React.Component {
             <div className="donkey">
                 <img className="image-donkey" src="assets/donkey-silhouette-black-small.jpg"></img>
                 <div className="button-left">
-                  <button className="myButton-left" onClick={this.handlePartySelection.bind(this, "democrat")}>
+                  <button className={(this.props.buttonIsDisabled ? " disabled" : "") + " myButton-left"} onClick={this.handlePartySelection.bind(this, "democrat")}>
                     <span>Democrat</span>
                   </button>
                 </div>
@@ -84,12 +89,13 @@ class PartyChooser extends React.Component {
             <div className="elephant">
                 <img className="image-elephant" src="assets/elephant-silhouette-black-small.jpg"></img>
                 <div className="button-right">
-                  <button className="myButton-right" onClick={this.handlePartySelection.bind(this, "republican")}>
+                  <button className={(this.props.buttonIsDisabled ? " disabled" : "") + " myButton-right"} onClick={this.handlePartySelection.bind(this, "republican")}>
                     <span>Republican</span>
                   </button>
                 </div>
             </div>
           </div>
+          <SharingButtons />
         </div>
       </div>
     )

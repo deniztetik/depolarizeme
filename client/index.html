@@ -8,6 +8,17 @@
     <title>Depolarize Me</title>
   </head>
   <body>
+    <!-- Begin JavaScript SDK for Facebook share. -->
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=113010898670";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+    <!-- End JavaScript SDK for Facebook share.  -->
+
     <div id="app"></div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="/compiled/bundle.js"></script>

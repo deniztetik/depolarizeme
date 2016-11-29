@@ -94,6 +94,7 @@
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
 	    _this.state = {
+	      buttonIsDisabled: false,
 	      party: null,
 	      localUser: null,
 	      remoteUser: null
@@ -136,6 +137,7 @@
 	      }).then(function (data) {
 	        console.log("User " + _this3.state.localUser + " deleted from db.");
 	        _this3.setUsers(null, null, null);
+	        _this3.toggleButton();
 	      }).catch(function (err) {
 	        console.error(err);
 	      });
@@ -144,6 +146,11 @@
 	    key: 'scrollBottom',
 	    value: function scrollBottom() {
 	      $("body").animate({ scrollTop: $(document).height() - $(window).height() });
+	    }
+	  }, {
+	    key: 'toggleButton',
+	    value: function toggleButton() {
+	      this.setState({ buttonIsDisabled: !this.state.buttonIsDisabled });
 	    }
 	  }, {
 	    key: 'render',
@@ -155,7 +162,9 @@
 	          party: this.state.party,
 	          localUser: this.state.localUser,
 	          remoteUser: this.state.remoteUser,
-	          onConnect: this.setUsers.bind(this)
+	          onConnect: this.setUsers.bind(this),
+	          toggleButton: this.toggleButton.bind(this),
+	          buttonIsDisabled: this.state.buttonIsDisabled
 	        }),
 	        this.state.party && this.state.localUser && this.state.remoteUser ? _react2.default.createElement(_Chat2.default, {
 	          party: this.state.party,
@@ -28565,6 +28574,7 @@
 	
 	    _this.state = {
 	      messages: _this.props.messages,
+	      messageHeights: [],
 	      localMessageClass: _this.props.party === "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
 	      localUsernameClass: _this.props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican",
 	      remoteMessageClass: _this.props.party !== "democrat" ? "chat-text-message-democrat" : "chat-text-message-republican",
@@ -28578,10 +28588,27 @@
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps, prevState) {
 	      if (this.props.messages.length > prevState.messages.length) {
-	        this.setState({ messages: prevProps.messages });
-	
+	        this.setState({
+	          messages: prevProps.messages,
+	          messageHeights: this.getMessageHeights()
+	        });
+	        console.log(this.getMessageHeights());
 	        this.forceUpdate();
 	      }
+	
+	      var $infinite = document.getElementsByClassName('infinite-scroll')[0];
+	      if (this.props.messages.length !== prevProps.messages.length) {
+	        $infinite.scrollTop = $infinite.scrollHeight;
+	        console.log("$infinite");
+	      }
+	    }
+	  }, {
+	    key: 'getMessageHeights',
+	    value: function getMessageHeights() {
+	      var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'));
+	      return $messages.map(function (message) {
+	        return message.clientHeight;
+	      });
 	    }
 	  }, {
 	    key: 'render',
@@ -28591,6 +28618,7 @@
 	      return _react2.default.createElement(
 	        _reactInfinite2.default,
 	        {
+	          className: 'infinite-scroll',
 	          containerHeight: 200,
 	          elementHeight: 30,
 	          displayBottomUpwards: true
@@ -28618,25 +28646,6 @@
 	        })
 	      );
 	    }
-	
-	    // render() {
-	    //   return (
-	    //     <ScrollArea
-	    //       speed={0.8}
-	    //       className="area"
-	    //       contentClassName="content"
-	    //       horizontal={false}
-	    //       style={{ height: 200 }}
-	    //       >
-	    //       <MessageList
-	    //         messages={this.state.messages}
-	    //         party={this.props.party}
-	    //         localUser={this.props.localUser}
-	    //       />
-	    //     </ScrollArea>
-	    //   )
-	    // }
-	
 	  }]);
 	
 	  return ChatText;
@@ -28743,6 +28752,10 @@
 	
 	var _reactRouter = __webpack_require__(/*! react-router */ 178);
 	
+	var _SharingButtons = __webpack_require__(/*! ./SharingButtons.jsx */ 251);
+	
+	var _SharingButtons2 = _interopRequireDefault(_SharingButtons);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -28813,6 +28826,12 @@
 	  }, {
 	    key: 'handlePartySelection',
 	    value: function handlePartySelection(choice) {
+	      //if button is disabled, return error;
+	      if (this.props.buttonIsDisabled) {
+	        return 1;
+	      }
+	      //if button is enabled, disable and generate session.
+	      this.props.toggleButton();
 	      var userName = this.generateUsername();
 	      console.log("username in HandlePartySelection: ", userName);
 	      this.enterWaitingRoom(userName, choice);
@@ -28876,7 +28895,7 @@
 	                { className: 'button-left' },
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'myButton-left', onClick: this.handlePartySelection.bind(this, "democrat") },
+	                  { className: (this.props.buttonIsDisabled ? " disabled" : "") + " myButton-left", onClick: this.handlePartySelection.bind(this, "democrat") },
 	                  _react2.default.createElement(
 	                    'span',
 	                    null,
@@ -28899,7 +28918,7 @@
 	                { className: 'button-right' },
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'myButton-right', onClick: this.handlePartySelection.bind(this, "republican") },
+	                  { className: (this.props.buttonIsDisabled ? " disabled" : "") + " myButton-right", onClick: this.handlePartySelection.bind(this, "republican") },
 	                  _react2.default.createElement(
 	                    'span',
 	                    null,
@@ -28908,7 +28927,8 @@
 	                )
 	              )
 	            )
-	          )
+	          ),
+	          _react2.default.createElement(_SharingButtons2.default, null)
 	        )
 	      );
 	    }
@@ -28920,7 +28940,46 @@
 	exports.default = PartyChooser;
 
 /***/ },
-/* 251 */,
+/* 251 */
+/*!***********************************!*\
+  !*** ./client/SharingButtons.jsx ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var SharingButtons = function SharingButtons(props) {
+	  return _react2.default.createElement(
+	    "div",
+	    { className: "fb-share-button",
+	      "data-href": "https://www.depme.com",
+	      "data-layout": "button_count",
+	      "data-size": "small",
+	      "data-mobile-iframe": "true" },
+	    _react2.default.createElement(
+	      "a",
+	      { className: "fb-xfbml-parse-ignore",
+	        target: "_blank",
+	        href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.depme.com%2F&src=sdkpreparse"
+	      },
+	      "Share"
+	    )
+	  );
+	};
+	
+	exports.default = SharingButtons;
+
+/***/ },
 /* 252 */
 /*!***************************!*\
   !*** ./client/Footer.jsx ***!
@@ -28975,7 +29034,7 @@
 	          "By using the Depolarize Me Web site, also called the Depme website, and/or related products and/or services (\"Depme\", \"Depolarize Me\", provided by Depme.com), you agree to the following terms: Do not use Depme if you are under 13. If you are under 18, use it only with a parent/guardian's permission. Do not transmit nudity, sexually harass anyone, publicize other peoples' private information, make statements that defame or libel anyone, violate intellectual property rights, use automated programs to start chats, or behave in any other inappropriate or illegal way on Depme. Understand that human behavior is fundamentally uncontrollable, that the people you encounter on Depme may not behave appropriately, and that they are solely responsible for their own behavior. Use Depme at your own peril. Disconnect if anyone makes you feel uncomfortable. You may be denied access to Depme for inappropriate behavior, or for any other reason. DEPME IS PROVIDED AS IS, AND TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW, IT IS PROVIDED WITHOUT ANY WARRANTY, EXPRESS OR IMPLIED, NOT EVEN A WARRANTY OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. TO THE MAXIMUM EXTENT ALLOWED BY APPLICABLE LAW, THE PROVIDER OF DEPME, AND ANY OTHER PERSON OR ENTITY ASSOCIATED WITH DEPME'S OPERATION, SHALL NOT BE HELD LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES ARISING FROM THE USE OF DEPME, OR ANY OTHER DAMAGES RELATED TO DEPME OF ANY KIND WHATSOEVER. By using Depme, you accept the practices outlined in Depme's ",
 	          _react2.default.createElement(
 	            "a",
-	            { style: { fontWeight: 'bold' }, onClick: function onClick() {
+	            { style: { fontWeight: 'bold', textDecoration: 'underline', color: 'blue' }, onClick: function onClick() {
 	                _this2.setState({ hidden: !_this2.state.hidden });
 	              } },
 	            "PRIVACY POLICY and INFORMATION ABOUT THE USE OF COOKIES "
@@ -28996,7 +29055,7 @@
 	            _react2.default.createElement(
 	              "span",
 	              null,
-	              "=C2=A010/28/2016"
+	              " 10/28/2016"
 	            )
 	          ),
 	          _react2.default.createElement("br", null),
@@ -29029,11 +29088,11 @@
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "Users are given an option to save the chat's log and share the link. Understand that=C2=A0",
+	            "Users are given an option to save the chat's log and share the link. Understand that ",
 	            _react2.default.createElement(
 	              "strong",
 	              null,
-	              "strangers can potentially tell other people anything you tell them,=C2=A0"
+	              "strangers can potentially tell other people anything you tell them, "
 	            ),
 	            "whether by sharing the log, or just by repeating what you said. Be careful what information you reveal to them."
 	          ),
@@ -29050,7 +29109,7 @@
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "In an Omegle text chat, only the following information is made available to other chat users:"
+	            "In a Depme text chat, only the following information is made available to other chat users:"
 	          ),
 	          _react2.default.createElement(
 	            "ul",
@@ -29074,7 +29133,7 @@
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "Depme uses Google Analytics to track non-personally-identifying statistical information about site usage. Google provides a=C2=A0",
+	            "Depme uses Google Analytics to track non-personally-identifying statistical information about site usage. Google provides a ",
 	            _react2.default.createElement(
 	              "a",
 	              { href: "http://tools.google.com/dlpage/gaoptout?hl=en" },
@@ -29098,30 +29157,36 @@
 	            _react2.default.createElement(
 	              "li",
 	              null,
-	              "Omegle provides an option for publishing a chat log to your Facebook account."
+	              "Depme provides an option for publishing a chat log to your Facebook account."
 	            )
 	          ),
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "The Facebook API allows Depme to access other information about you, such as your name and other personal details. However, Depme does=C2=A0",
+	            "The Facebook API allows Depme to access other information about you, such as your name and other personal details. However, Depme does ",
 	            _react2.default.createElement(
 	              "strong",
 	              null,
 	              "not"
 	            ),
-	            "=C2=A0share, save, or make any use of this information."
+	            " share, save, or make any use of this information."
 	          ),
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "Depme does not share personal information about you with Facebook, except in order to perform actions you explicitly initiate. Use of Facebook is subject to=C2=A0",
+	            "Depme does not share personal information about you with Facebook, except in order to perform actions you explicitly initiate. Use of Facebook is subject to ",
 	            _react2.default.createElement(
 	              "a",
 	              { href: "https://www.facebook.com/about/privacy/" },
 	              "Facebook's privacy policy"
 	            ),
 	            "."
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Contact us at depolarizeme@gmail.com or find us on facebook or twitter."
 	          )
 	        )
 	      );
