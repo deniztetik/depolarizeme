@@ -28595,6 +28595,12 @@
 	        console.log(this.getMessageHeights());
 	        this.forceUpdate();
 	      }
+	
+	      var $infinite = document.getElementsByClassName('infinite-scroll')[0];
+	      if (this.props.messages.length !== prevProps.messages.length) {
+	        $infinite.scrollTop = $infinite.scrollHeight;
+	        console.log("$infinite");
+	      }
 	    }
 	  }, {
 	    key: 'getMessageHeights',
@@ -28612,6 +28618,7 @@
 	      return _react2.default.createElement(
 	        _reactInfinite2.default,
 	        {
+	          className: 'infinite-scroll',
 	          containerHeight: 200,
 	          elementHeight: 30,
 	          displayBottomUpwards: true
@@ -29174,6 +29181,12 @@
 	              "Facebook's privacy policy"
 	            ),
 	            "."
+	          ),
+	          _react2.default.createElement("br", null),
+	          _react2.default.createElement(
+	            "p",
+	            null,
+	            "Contact us at depolarizeme@gmail.com or find us on facebook or twitter."
 	          )
 	        )
 	      );

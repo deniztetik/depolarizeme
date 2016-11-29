@@ -37,6 +37,8 @@ class Footer extends React.Component {
           </ul>
           <p>The Facebook API allows Depme to access other information about you, such as your name and other personal details. However, Depme does <strong>not</strong> share, save, or make any use of this information.</p>
           <p>Depme does not share personal information about you with Facebook, except in order to perform actions you explicitly initiate. Use of Facebook is subject to <a href="https://www.facebook.com/about/privacy/">Facebook's privacy policy</a>.</p>
+          <br/>
+          <p>Contact us at depolarizeme@gmail.com or find us on facebook or twitter.</p>
         </div>
       </div>
     )

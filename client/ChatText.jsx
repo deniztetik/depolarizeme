@@ -25,6 +25,13 @@ class ChatText extends React.Component {
       console.log(this.getMessageHeights())
       this.forceUpdate();
     }
+
+    var $infinite = document.getElementsByClassName('infinite-scroll')[0];
+    if (this.props.messages.length !== prevProps.messages.length) {
+      $infinite.scrollTop = $infinite.scrollHeight;
+      console.log("$infinite");  
+    }
+
   }
 
   getMessageHeights() {
@@ -37,6 +44,7 @@ class ChatText extends React.Component {
   render() {
     return (
       <Infinite
+        className="infinite-scroll"
         containerHeight={200}
         elementHeight={30}
         displayBottomUpwards={true}
