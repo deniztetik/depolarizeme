@@ -6,6 +6,11 @@
 	min-height: 120%;
 }
 
+.chat-spinner {
+	height: 100px;
+	width: 100px;
+}
+
 .jumbotron {
 	text-align: center;
 	padding-top: 100px;
@@ -239,8 +244,7 @@
 	margin: 1%;
 	font-size: 1.0rem;
 	outline: none;
-	word-wrap: normal;
-
+	word-break: break-word;
 }
 
 .chat-input-submit {
@@ -318,6 +322,10 @@
 	white-space: break-word;
 }
 
+.message-body {
+	padding-left: 5px;
+}
+
 .footer-container {
 	position: relative;
 	float: bottom;
@@ -330,5 +338,4 @@
 .disclaimer {
 	font-size: small;
 	color: grey;
-
 }

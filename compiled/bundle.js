@@ -110,7 +110,7 @@
 	      window.addEventListener("beforeunload", function (e) {
 	        e.preventDefault();
 	        _this2.exitChat.call(_this2);
-	        e.returnValue = "beforeunload fired.";
+	        // e.returnValue = "beforeunload fired."
 	      });
 	    }
 	  }, {
@@ -172,7 +172,15 @@
 	          remoteUser: this.state.remoteUser,
 	          scrollBottom: this.scrollBottom,
 	          exitChat: this.exitChat.bind(this)
-	        }) : _react2.default.createElement('div', null),
+	        }) : _react2.default.createElement(
+	          'div',
+	          { style: {
+	              display: "flex",
+	              justifyContent: "center",
+	              height: "200px"
+	            } },
+	          this.state.buttonIsDisabled ? _react2.default.createElement('img', { className: 'chat-spinner', src: 'assets/spinner.gif' }) : _react2.default.createElement('div', null)
+	        ),
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
 	    }
@@ -28680,9 +28688,14 @@
 	    _react2.default.createElement(
 	      "span",
 	      { className: props.party === "democrat" ? "chat-text-message-username-democrat" : "chat-text-message-username-republican" },
-	      props.party === "democrat" ? "Democrat: " : "Republican: "
+	      props.party === "democrat" ? "Democrat:  " : "Republican:  "
 	    ),
-	    props.message.body
+	    " ",
+	    _react2.default.createElement(
+	      "span",
+	      { className: "message-body" },
+	      props.message.body
+	    )
 	  );
 	};
 	

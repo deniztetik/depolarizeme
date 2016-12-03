@@ -24,7 +24,7 @@ class App extends React.Component {
     window.addEventListener("beforeunload", (e) => {
       e.preventDefault()
       this.exitChat.call(this)
-      e.returnValue = "beforeunload fired."
+      // e.returnValue = "beforeunload fired."
     })
   }
 
@@ -78,7 +78,13 @@ class App extends React.Component {
           scrollBottom={this.scrollBottom}
           exitChat={this.exitChat.bind(this)}
         /> :
-        <div></div>
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          height: "200px"
+        }}>
+          {this.state.buttonIsDisabled ? <img className="chat-spinner" src="assets/spinner.gif"></img> : <div></div>}
+        </div>
         }
         <Footer />
       </div>
