@@ -28971,23 +28971,20 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	var getChatHTML = function getChatHTML() {
+	  var chatNodes = document.getElementsByClassName("infinite-scroll");
+	  console.log("ChatNodes: ", chatNodes);
+	  // return html
+	};
+	
 	var SharingButtons = function SharingButtons(props) {
-	  return _react2.default.createElement(
-	    "div",
-	    { className: "fb-share-button",
-	      "data-href": "https://www.depme.com",
-	      "data-layout": "button_count",
-	      "data-size": "small",
-	      "data-mobile-iframe": "true" },
-	    _react2.default.createElement(
-	      "a",
-	      { className: "fb-xfbml-parse-ignore",
-	        target: "_blank",
-	        href: "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.depme.com%2F&src=sdkpreparse"
-	      },
-	      "Share"
-	    )
-	  );
+	  return _react2.default.createElement("div", { className: "fb-like",
+	    "data-href": "http://depolarizeme.azurewebsites.net/share",
+	    "data-layout": "standard",
+	    "data-action": "like",
+	    "data-size": "small",
+	    "data-show-faces": "true",
+	    "data-share": "true" });
 	};
 	
 	exports.default = SharingButtons;

@@ -153,4 +153,11 @@ module.exports = function(app) {
     console.log("you did a delet on: ", currentUser);
   })
 
+  app.get('/share', (req, res) => {
+    console.log(req.data);
+    //extract html from request
+    //send response using that html.
+    res.send(req.data);
+  })
+
 }
