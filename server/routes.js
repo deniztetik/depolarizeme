@@ -157,7 +157,7 @@ module.exports = function(app) {
     console.log(req.data);
     //extract html from request
     //send response using that html.
-    res.send(req.data);
+    res.send("<div>hallo dis iz sharez</div>");
   })
 
 }
