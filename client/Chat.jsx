@@ -1,6 +1,7 @@
 import React from 'react'
 import ChatText from './ChatText.jsx'
 import ChatInput from './ChatInput.jsx'
+import ShadowChat from './ShadowChat.jsx'
 
 class Chat extends React.Component {
   constructor(props) {
@@ -103,6 +104,14 @@ class Chat extends React.Component {
         <ChatInput
           handleSubmit={this.handleNewMessageSubmit.bind(this)}
           destroySession={this.props.exitChat}/>
+        <div id="shadow-chat-hider" className="hidden">
+          <ShadowChat
+            party={this.props.party}
+            localUser={this.props.localUser}
+            remoteUser={this.props.remoteUser}
+            messages={this.state.messages}
+          />
+        </div>
       </div>
     )
   }

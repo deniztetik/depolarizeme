@@ -95,7 +95,10 @@ class PartyChooser extends React.Component {
                 </div>
             </div>
           </div>
-          <SharingButtons />
+          <SharingButtons
+            localUser={this.props.localUser}
+            remoteUser={this.props.remoteUser}
+          />
         </div>
       </div>
     )

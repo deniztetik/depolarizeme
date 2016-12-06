@@ -5,6 +5,7 @@ var url = "mongodb://ianculleton:depolarizeme16@ds153637.mlab.com:53637/depolari
 
 var Message = require("../db/messages.js")
 var User = require("../db/users.js")
+var Image = require("../db/images.js")
 
 mongoose.connect(url)
 
@@ -153,11 +154,8 @@ module.exports = function(app) {
     console.log("you did a delet on: ", currentUser);
   })
 
-  app.get('/share', (req, res) => {
-    console.log(req.data);
-    //extract html from request
-    //send response using that html.
-    res.send("<div>hallo dis iz sharez</div>");
+  app.post("/share/:userIDs", (req, res) => {
+    console.log("Shared image data: ", req.data);
   })
 
 }

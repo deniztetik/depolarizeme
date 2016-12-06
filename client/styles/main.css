@@ -11,6 +11,11 @@
 	width: 100px;
 }
 
+#shadow-chat-hider {
+  position: absolute;
+	top: 10000px;
+}
+
 .jumbotron {
 	text-align: center;
 	padding-top: 100px;
