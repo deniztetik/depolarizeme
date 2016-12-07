@@ -316,7 +316,29 @@
 	color: #476e9e;
 	font-weight: bold;
 }
-.chat-input-destroy:active {
+.chat-input-transcribe {
+	-moz-box-shadow: 0px 0px 0px 2px #FFFFFF;
+	-webkit-box-shadow: 0px 0px 0px 2px #FFFFFF;
+	box-shadow: 0px 0px 0px 2px #FFFFFF;
+	background-color:#FFFFFF;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+	border:0px solid #FFFFFF;
+	display:inline-block;
+	cursor:pointer;
+	color:#476e9e;
+	font-family:Arial;
+	font-size:16px;
+	padding:5px 5px;
+	text-decoration:none;
+	outline: none;
+}
+.chat-input-transcribe:hover {
+	background-color:#476e9e;
+	color:#FFFFFF;
+}
+.chat-input-transcribe:active {
 	position:relative;
 	top:1px;
 }

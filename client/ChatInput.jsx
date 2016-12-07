@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import TranscriptButton from './TranscriptButton.jsx'
 
 var ChatInput = ({handleSubmit, destroySession}) => (
   <div className="chat-input-container">
@@ -7,7 +8,10 @@ var ChatInput = ({handleSubmit, destroySession}) => (
       <input className="chat-input-textarea" type="text"></input>
       <input className="chat-input-submit" type="submit" value="Send"></input>
     </form>
-    <button className="chat-input-destroy" onClick={destroySession}>Chat with another partner</button>
+    <div style={{display: "flex", padding: "10px", justifyContent: "space-between"}}>
+      <button className="chat-input-destroy" onClick={destroySession}>Chat with another partner</button>
+      <TranscriptButton />
+    </div>
   </div>
 )
 
