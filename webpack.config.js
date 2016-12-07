@@ -5,13 +5,10 @@ var BUILD_DIR = path.resolve(__dirname, 'compiled');
 var APP_DIR = path.resolve(__dirname, 'client');
 
 var config = {
-  entry: {
-    main: APP_DIR + '/app.jsx',
-    share: APP_DIR + '/share/share.jsx'
-  },
+  entry: APP_DIR + '/app.jsx',
   output: {
     path: BUILD_DIR,
-    filename: '[name].bundle.js'
+    filename: 'bundle.js'
   },
   debug: true,
   resolve: {
