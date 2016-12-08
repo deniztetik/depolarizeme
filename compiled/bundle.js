@@ -32441,26 +32441,7 @@
 	    _react2.default.createElement(
 	      'div',
 	      null,
-	      _react2.default.createElement(
-	        'h1',
-	        null,
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'dep' },
-	          'Dep'
-	        ),
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'olarize' },
-	          'olarize'
-	        ),
-	        ' ',
-	        _react2.default.createElement(
-	          'span',
-	          { className: 'me' },
-	          'Me'
-	        )
-	      )
+	      _react2.default.createElement('img', { src: '/assets/DepMe_Small.png' })
 	    ),
 	    props.messages.map(function (message, idx) {
 	      if (message.author === props.localUser) {

@@ -4,7 +4,7 @@ import MessageItem from './MessageItem.jsx';
 var ShadowChat = (props) => (
   <div className="shadow-chat">
     <div>
-      <h1><span className="dep">Dep</span><span className="olarize">olarize</span> <span className="me">Me</span></h1>
+      <img src="/assets/DepMe_Small.png" />
     </div>
     {
       props.messages.map((message, idx) => {
