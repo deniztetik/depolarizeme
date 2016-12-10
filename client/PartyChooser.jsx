@@ -33,7 +33,6 @@ class PartyChooser extends React.Component {
   }
 
   getActiveUsers(party) {
-    console.log("current user in getActiveUsers", this.props.localUser)
     // var otherParty = this.props.params.party === "democrat" ? "republican" : "democrat"
     var intID = setInterval(() => {
       if (this.props.remoteUser !== null) {
@@ -44,7 +43,7 @@ class PartyChooser extends React.Component {
       }
       $.get("/users/"+party+"/"+ this.props.localUser, (data, err) => {
         if (err) {
-          console.log(err)
+          console.error(err)
         }
         if (data && data !== "no active users found.") {
           this.props.onConnect(this.props.localUser, data, party)
@@ -59,7 +58,6 @@ class PartyChooser extends React.Component {
     //if button is enabled, disable and generate session.
     this.props.toggleButton();
     var userName = this.generateUsername();
-    console.log("username in HandlePartySelection: ", userName)
     this.enterWaitingRoom(userName, choice);
     this.getActiveUsers(choice);
   }

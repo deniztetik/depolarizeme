@@ -21,7 +21,7 @@ class Footer extends React.Component {
           <p>In general, messages are not stored indefinitely, but select messages may be read by a human being to improve Depme services or for other quality control purposes.</p>
           <p>At the beginning of every chat, a record is made of the fact that a chat occurred between youand your chat partner. This record includes a timestamp, as well as IP address, and similar information for you and your chat partner. These records may be used for the purpose of tracking spammers, hackers, and others who pose harm to the site; and may also be used for law enforcement purposes; oranalyzed in aggregate to produce statistical data (e.g., average number ofchats started at different times of day). These records are typically stored for a limited time.</p>
           <p>Users are given an option to save the chat's log and share the link. Understand that <strong>strangers can potentially tell other people anything you tell them, </strong>whether by sharing the log, or just by repeating what you said. Be careful what information you reveal to them.</p>
-          <p>The records Depme keeps may be shared with third parties for the purpose of law enforcement, to monitor and enforce compliance with Omegle's rules, or to improve Omegle's monitoring and enforcement processes.</p>
+          <p>The records Depme keeps may be shared with third parties for the purpose of law enforcement, to monitor and enforce compliance with DepMe's rules, or to improve DepMe's monitoring and enforcement processes.</p>
           <h3>Information made availableto other chat users</h3>
           <p>In a Depme text chat, only the following information is made available to other chat users:</p>
           <ul>

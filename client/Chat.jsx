@@ -15,7 +15,6 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
-    console.log("current chat state: ", this.state)
     if (this.props.localUser && this.props.remoteUser && !this.state.resolved) {
       this.getMessages();
       this.checkUser();
@@ -31,15 +30,11 @@ class Chat extends React.Component {
     })
     clearInterval(this.state.userInterval);
     clearInterval(this.state.messagesInterval);
-    console.log("current chat state: ", this.state)
   }
 
   checkUser() {
     var userCheckIntervalId = setInterval(() => {
       $.get("/users/"+this.props.remoteUser, (data, err) => {
-        if (data) {
-          console.log("Connected user from server: ", data)
-        }
         if (!data.username) {
           this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected..."}])})
           clearInterval(this.state.userInterval);

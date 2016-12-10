@@ -130,12 +130,10 @@
 	      if (e) {
 	        e.preventDefault();
 	      }
-	      console.log('exiting chat');
 	      $.ajax({
 	        method: "DELETE",
 	        url: "/users/" + this.state.localUser
 	      }).then(function (data) {
-	        console.log("User " + _this3.state.localUser + " deleted from db.");
 	        _this3.setUsers(null, null, null);
 	        _this3.toggleButton();
 	      }).catch(function (err) {
@@ -28433,7 +28431,6 @@
 	  _createClass(Chat, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log("current chat state: ", this.state);
 	      if (this.props.localUser && this.props.remoteUser && !this.state.resolved) {
 	        this.getMessages();
 	        this.checkUser();
@@ -28450,7 +28447,6 @@
 	      });
 	      clearInterval(this.state.userInterval);
 	      clearInterval(this.state.messagesInterval);
-	      console.log("current chat state: ", this.state);
 	    }
 	  }, {
 	    key: 'checkUser',
@@ -28459,9 +28455,6 @@
 	
 	      var userCheckIntervalId = setInterval(function () {
 	        $.get("/users/" + _this2.props.remoteUser, function (data, err) {
-	          if (data) {
-	            console.log("Connected user from server: ", data);
-	          }
 	          if (!data.username) {
 	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
 	            clearInterval(_this2.state.userInterval);
@@ -28612,8 +28605,7 @@
 	
 	      if (this.props.messages.length > prevState.messages.length) {
 	        this.setState({
-	          messages: prevProps.messages,
-	          messageHeights: this.getMessageHeights()
+	          messages: prevProps.messages
 	        });
 	      }
 	
@@ -28621,14 +28613,6 @@
 	      if (this.props.messages.length !== prevProps.messages.length) {
 	        $infinite.scrollTop = $infinite.scrollHeight;
 	      }
-	    }
-	  }, {
-	    key: 'getMessageHeights',
-	    value: function getMessageHeights() {
-	      var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'));
-	      return $messages.map(function (message) {
-	        return message.clientHeight;
-	      }).slice(0, $messages.length / 2).push(56);
 	    }
 	  }, {
 	    key: 'guesstimateMessageHeights',
@@ -28653,8 +28637,6 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      var hs = this.guesstimateMessageHeights(this.props.messages).push(24);
-	      if (this.props.messages.length > 0) {}
 	      return _react2.default.createElement(
 	        _reactInfinite2.default,
 	        {
@@ -32560,7 +32542,6 @@
 	    value: function getActiveUsers(party) {
 	      var _this2 = this;
 	
-	      console.log("current user in getActiveUsers", this.props.localUser);
 	      // var otherParty = this.props.params.party === "democrat" ? "republican" : "democrat"
 	      var intID = setInterval(function () {
 	        if (_this2.props.remoteUser !== null) {
@@ -32571,7 +32552,7 @@
 	        }
 	        $.get("/users/" + party + "/" + _this2.props.localUser, function (data, err) {
 	          if (err) {
-	            console.log(err);
+	            console.error(err);
 	          }
 	          if (data && data !== "no active users found.") {
 	            _this2.props.onConnect(_this2.props.localUser, data, party);
@@ -32589,7 +32570,6 @@
 	      //if button is enabled, disable and generate session.
 	      this.props.toggleButton();
 	      var userName = this.generateUsername();
-	      console.log("username in HandlePartySelection: ", userName);
 	      this.enterWaitingRoom(userName, choice);
 	      this.getActiveUsers(choice);
 	    }
@@ -32876,7 +32856,7 @@
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            "The records Depme keeps may be shared with third parties for the purpose of law enforcement, to monitor and enforce compliance with Omegle's rules, or to improve Omegle's monitoring and enforcement processes."
+	            "The records Depme keeps may be shared with third parties for the purpose of law enforcement, to monitor and enforce compliance with DepMe's rules, or to improve DepMe's monitoring and enforcement processes."
 	          ),
 	          _react2.default.createElement(
 	            "h3",

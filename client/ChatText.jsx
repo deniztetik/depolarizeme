@@ -20,8 +20,7 @@ class ChatText extends React.Component {
 
     if (this.props.messages.length > prevState.messages.length) {
       this.setState({
-        messages: prevProps.messages,
-        messageHeights:this.getMessageHeights()
+        messages: prevProps.messages
       })
     }
 
@@ -31,13 +30,6 @@ class ChatText extends React.Component {
       $infinite.scrollTop = $infinite.scrollHeight;
     }
 
-  }
-
-  getMessageHeights() {
-    var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'))
-    return $messages.map((message) => {
-      return message.clientHeight;
-    }).slice(0, $messages.length / 2).push(56);
   }
 
   guesstimateMessageHeights(messageList) {
@@ -58,10 +50,6 @@ class ChatText extends React.Component {
   }
 
   render() {
-    var hs = this.guesstimateMessageHeights(this.props.messages).push(24);
-    if (this.props.messages.length > 0) {
-
-    }
     return (
       <Infinite
         className="infinite-scroll"

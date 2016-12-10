@@ -38,12 +38,10 @@ class App extends React.Component {
 
   exitChat(e) {
     if (e) {e.preventDefault();}
-    console.log('exiting chat')
     $.ajax({
       method: "DELETE",
       url: "/users/"+this.state.localUser
     }).then((data) => {
-      console.log("User " + this.state.localUser + " deleted from db.")
       this.setUsers(null, null, null)
       this.toggleButton();
     }).catch((err) => {
