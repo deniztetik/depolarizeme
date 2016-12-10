@@ -28609,19 +28609,17 @@
 	  _createClass(ChatText, [{
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps, prevState) {
+	
 	      if (this.props.messages.length > prevState.messages.length) {
 	        this.setState({
 	          messages: prevProps.messages,
 	          messageHeights: this.getMessageHeights()
 	        });
-	        console.log(this.getMessageHeights());
-	        this.forceUpdate();
 	      }
 	
 	      var $infinite = document.getElementsByClassName('infinite-scroll')[0];
 	      if (this.props.messages.length !== prevProps.messages.length) {
 	        $infinite.scrollTop = $infinite.scrollHeight;
-	        console.log("$infinite");
 	      }
 	    }
 	  }, {
@@ -28630,6 +28628,24 @@
 	      var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'));
 	      return $messages.map(function (message) {
 	        return message.clientHeight;
+	      }).slice(0, $messages.length / 2).push(56);
+	    }
+	  }, {
+	    key: 'guesstimateMessageHeights',
+	    value: function guesstimateMessageHeights(messageList) {
+	      var $test = document.getElementById("Test");
+	      var width = $test.clientWidth + 1;
+	      var $infinite = $('.infinite-scroll')[0];
+	
+	      var charWidth = width / 52;
+	      var charHeight = 24;
+	      var infiniteWidth = $infinite ? $infinite.clientWidth : 332;
+	
+	      var charsPerLine = Math.round(infiniteWidth / charWidth);
+	
+	      return messageList.map(function (message) {
+	        var numRows = message.body.length / charsPerLine;
+	        return numRows * charHeight;
 	      });
 	    }
 	  }, {
@@ -28637,12 +28653,14 @@
 	    value: function render() {
 	      var _this2 = this;
 	
+	      var hs = this.guesstimateMessageHeights(this.props.messages).push(24);
+	      if (this.props.messages.length > 0) {}
 	      return _react2.default.createElement(
 	        _reactInfinite2.default,
 	        {
 	          className: 'infinite-scroll',
 	          containerHeight: 200,
-	          elementHeight: 30,
+	          elementHeight: this.guesstimateMessageHeights(this.props.messages),
 	          displayBottomUpwards: true
 	        },
 	        this.props.messages.map(function (message, idx) {

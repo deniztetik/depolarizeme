@@ -17,19 +17,18 @@ class ChatText extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+
     if (this.props.messages.length > prevState.messages.length) {
       this.setState({
         messages: prevProps.messages,
-        messageHeights: this.getMessageHeights()
+        messageHeights:this.getMessageHeights()
       })
-      console.log(this.getMessageHeights())
-      this.forceUpdate();
     }
+
 
     var $infinite = document.getElementsByClassName('infinite-scroll')[0];
     if (this.props.messages.length !== prevProps.messages.length) {
       $infinite.scrollTop = $infinite.scrollHeight;
-      console.log("$infinite");  
     }
 
   }
@@ -38,15 +37,36 @@ class ChatText extends React.Component {
     var $messages = Array.prototype.slice.call(document.getElementsByClassName('message-item'))
     return $messages.map((message) => {
       return message.clientHeight;
+    }).slice(0, $messages.length / 2).push(56);
+  }
+
+  guesstimateMessageHeights(messageList) {
+    var $test = document.getElementById("Test");
+    var width = ($test.clientWidth + 1);
+    var $infinite = $('.infinite-scroll')[0];
+
+    var charWidth = width / 52;
+    var charHeight = 24;
+    var infiniteWidth = $infinite ? $infinite.clientWidth : 332;
+
+    var charsPerLine = Math.round(infiniteWidth / charWidth);
+
+    return messageList.map((message) => {
+      var numRows = message.body.length / charsPerLine
+      return numRows * charHeight;
     })
   }
 
   render() {
+    var hs = this.guesstimateMessageHeights(this.props.messages).push(24);
+    if (this.props.messages.length > 0) {
+
+    }
     return (
       <Infinite
         className="infinite-scroll"
         containerHeight={200}
-        elementHeight={30}
+        elementHeight={this.guesstimateMessageHeights(this.props.messages)}
         displayBottomUpwards={true}
       >
        {

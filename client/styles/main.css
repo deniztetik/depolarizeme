@@ -201,7 +201,7 @@
 	padding: 3px;
 	margin: 2px;
 	font-size: 1.0rem;
-	font-family: sans-serif;;
+	font-family: sans-serif;
 	justify-content: flex-start;
 }
 
@@ -381,4 +381,13 @@
 	font-size: small;
 	color: grey;
 
+}
+
+#Test {
+    position: absolute;
+    top: -1000px;
+		left: -1000px;
+    height: auto;
+    width: auto;
+    white-space: nowrap; /* Thanks to Herb Caudill comment */
 }
