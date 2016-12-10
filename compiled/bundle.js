@@ -32720,13 +32720,22 @@
 	      return _react2.default.createElement(
 	        "div",
 	        null,
-	        _react2.default.createElement("div", { className: "fb-like",
-	          "data-href": "http://www.depme.com",
-	          "data-layout": "standard",
-	          "data-action": "like",
-	          "data-size": "small",
-	          "data-show-faces": "true",
-	          "data-share": "true" })
+	        _react2.default.createElement(
+	          "div",
+	          {
+	            className: "fb-share-button",
+	            "data-href": "http://www.depme.com/",
+	            "data-layout": "button_count",
+	            "data-size": "small",
+	            "data-mobile-iframe": "true" },
+	          _react2.default.createElement(
+	            "a",
+	            { className: "fb-xfbml-parse-ignore",
+	              target: "_blank",
+	              href: "https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fwww.depme.com%2F&src=sdkpreparse" },
+	            "Share"
+	          )
+	        )
 	      );
 	    }
 	  }]);
