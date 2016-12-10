@@ -3,5 +3,7 @@ compiled
 azure.err
 *.publishsettings
 
+server/routes.js
+
 specs.txt
 .DS_Store
