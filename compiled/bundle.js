@@ -28482,6 +28482,7 @@
 	            console.error(err);
 	          }
 	          if (data) {
+	            console.log(data);
 	            _this3.setState({ messages: data });
 	          }
 	        });

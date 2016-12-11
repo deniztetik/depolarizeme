@@ -53,6 +53,7 @@ class Chat extends React.Component {
           console.error(err)
         }
         if (data) {
+          console.log(data)
           this.setState({messages: data})
         }
       })

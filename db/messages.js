@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var messageSchema = new Schema({
+  messageID: { type: Schema.ObjectId, ref: 'Message' },
   users:  [{type: String, ref:"users"}],
   author: String,
   body:   String,
