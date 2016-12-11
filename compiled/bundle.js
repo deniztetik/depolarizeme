@@ -28609,7 +28609,6 @@
 	  _createClass(ChatText, [{
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate(prevProps, prevState) {
-	
 	      if (this.props.messages.length > prevState.messages.length) {
 	        this.setState({
 	          messages: prevProps.messages
@@ -28635,7 +28634,7 @@
 	      var charsPerLine = Math.round(infiniteWidth / charWidth);
 	
 	      return messageList.map(function (message) {
-	        var numRows = message.body.length / charsPerLine;
+	        var numRows = Math.ceil(message.body.length / charsPerLine);
 	        return numRows * charHeight;
 	      });
 	    }
