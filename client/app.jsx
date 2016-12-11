@@ -34,16 +34,24 @@ class App extends React.Component {
       remoteUser: newRemoteUser,
       party: newParty
     })
-    this.forceUpdate();
   }
 
   exitChat(e) {
-    if (e) {e.preventDefault();}
+    var preserveChat = false;
+    if (e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+
+      }
+      preserveChat = !!e.preserveChat;
+    }
     $.ajax({
       method: "DELETE",
       url: "/users/"+this.state.localUser
     }).then((data) => {
-      this.setUsers(null, null, null)
+      if (!preserveChat) {
+        this.setUsers(null, null, null);
+      }
       this.toggleButton();
     }).catch((err) => {
       console.error(err);

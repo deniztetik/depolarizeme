@@ -121,21 +121,26 @@
 	        remoteUser: newRemoteUser,
 	        party: newParty
 	      });
-	      this.forceUpdate();
 	    }
 	  }, {
 	    key: 'exitChat',
 	    value: function exitChat(e) {
 	      var _this3 = this;
 	
+	      var preserveChat = false;
 	      if (e) {
-	        e.preventDefault();
+	        if (e.preventDefault) {
+	          e.preventDefault();
+	        }
+	        preserveChat = !!e.preserveChat;
 	      }
 	      $.ajax({
 	        method: "DELETE",
 	        url: "/users/" + this.state.localUser
 	      }).then(function (data) {
-	        _this3.setUsers(null, null, null);
+	        if (!preserveChat) {
+	          _this3.setUsers(null, null, null);
+	        }
 	        _this3.toggleButton();
 	      }).catch(function (err) {
 	        console.error(err);
@@ -28457,10 +28462,10 @@
 	      var userCheckIntervalId = setInterval(function () {
 	        $.get("/users/" + _this2.props.remoteUser, function (data, err) {
 	          if (!data.username) {
-	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
+	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected.  Please return to the main menu to chat with another user." }]) });
 	            clearInterval(_this2.state.userInterval);
 	            clearInterval(_this2.state.messagesInterval);
-	            _this2.props.exitChat();
+	            _this2.props.exitChat({ preserveChat: true });
 	          }
 	        });
 	      }, 10000);

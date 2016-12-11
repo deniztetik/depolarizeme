@@ -36,10 +36,10 @@ class Chat extends React.Component {
     var userCheckIntervalId = setInterval(() => {
       $.get("/users/"+this.props.remoteUser, (data, err) => {
         if (!data.username) {
-          this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected..."}])})
+          this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected.  Please return to the main menu to chat with another user."}])})
           clearInterval(this.state.userInterval);
           clearInterval(this.state.messagesInterval);
-          this.props.exitChat();
+          this.props.exitChat({preserveChat: true});
         }
       })
     }, 10000);
