@@ -140,8 +140,8 @@
 	      }).then(function (data) {
 	        if (!preserveChat) {
 	          _this3.setUsers(null, null, null);
+	          _this3.toggleButton();
 	        }
-	        _this3.toggleButton();
 	      }).catch(function (err) {
 	        console.error(err);
 	      });

@@ -51,8 +51,8 @@ class App extends React.Component {
     }).then((data) => {
       if (!preserveChat) {
         this.setUsers(null, null, null);
+        this.toggleButton();
       }
-      this.toggleButton();
     }).catch((err) => {
       console.error(err);
     })
