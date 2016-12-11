@@ -28462,7 +28462,7 @@
 	      var userCheckIntervalId = setInterval(function () {
 	        $.get("/users/" + _this2.props.remoteUser, function (data, err) {
 	          if (!data.username) {
-	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected.  Please return to the main menu to chat with another user." }]) });
+	            _this2.setState({ messages: _this2.state.messages.concat([{ body: "Your conversation partner has disconnected.  Please return to the main menu to chat with another user." }]) });
 	            clearInterval(_this2.state.userInterval);
 	            clearInterval(_this2.state.messagesInterval);
 	            _this2.props.exitChat(true, true);
