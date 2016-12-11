@@ -34,6 +34,7 @@ class App extends React.Component {
       remoteUser: newRemoteUser,
       party: newParty
     })
+    this.forceUpdate();
   }
 
   exitChat(e) {
@@ -68,7 +69,7 @@ class App extends React.Component {
           toggleButton={this.toggleButton.bind(this)}
           buttonIsDisabled={this.state.buttonIsDisabled}
         />
-        { this.state.party && this.state.localUser && this.state.remoteUser ?
+        { this.state.party !== null && this.state.localUser !== null && this.state.remoteUser !== null ?
         <Chat
           party={this.state.party}
           localUser={this.state.localUser}

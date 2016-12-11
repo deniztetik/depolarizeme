@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 
-var url = "<ROUTE TO DB>"
+var url = "mongodb://ianculleton:depolarizeme16@ds153637.mlab.com:53637/depolarizeme"
 
 var Message = require("../db/messages.js")
 var User = require("../db/users.js")

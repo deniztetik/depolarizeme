@@ -121,6 +121,7 @@
 	        remoteUser: newRemoteUser,
 	        party: newParty
 	      });
+	      this.forceUpdate();
 	    }
 	  }, {
 	    key: 'exitChat',
@@ -164,7 +165,7 @@
 	          toggleButton: this.toggleButton.bind(this),
 	          buttonIsDisabled: this.state.buttonIsDisabled
 	        }),
-	        this.state.party && this.state.localUser && this.state.remoteUser ? _react2.default.createElement(_Chat2.default, {
+	        this.state.party !== null && this.state.localUser !== null && this.state.remoteUser !== null ? _react2.default.createElement(_Chat2.default, {
 	          party: this.state.party,
 	          localUser: this.state.localUser,
 	          remoteUser: this.state.remoteUser,
@@ -28459,6 +28460,7 @@
 	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected..." }]) });
 	            clearInterval(_this2.state.userInterval);
 	            clearInterval(_this2.state.messagesInterval);
+	            _this2.props.exitChat();
 	          }
 	        });
 	      }, 10000);

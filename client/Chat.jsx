@@ -39,6 +39,7 @@ class Chat extends React.Component {
           this.setState({messages: this.state.messages.reverse().concat([{body: "Your conversation partner has disconnected..."}])})
           clearInterval(this.state.userInterval);
           clearInterval(this.state.messagesInterval);
+          this.props.exitChat();
         }
       })
     }, 10000);
