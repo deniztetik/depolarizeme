@@ -9,7 +9,7 @@ var ChatInput = ({handleSubmit, destroySession}) => (
       <input className="chat-input-submit" type="submit" value="Send"></input>
     </form>
     <div style={{display: "flex", padding: "10px", justifyContent: "space-between"}}>
-      <button className="chat-input-destroy" onClick={destroySession}>Chat with another partner</button>
+      <button className="chat-input-destroy" onClick={(e) => { destroySession(e, false)}}>Chat with another partner</button>
       <TranscriptButton />
     </div>
   </div>

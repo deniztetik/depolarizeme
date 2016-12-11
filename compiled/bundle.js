@@ -124,26 +124,26 @@
 	    }
 	  }, {
 	    key: 'exitChat',
-	    value: function exitChat(e) {
+	    value: function exitChat(e, preserveChat) {
 	      var _this3 = this;
 	
-	      var preserveChat = false;
 	      if (e) {
 	        if (e.preventDefault) {
 	          e.preventDefault();
 	        }
-	        preserveChat = !!e.preserveChat;
+	        if (!preserveChat) {
+	          this.setUsers(null, null, null);
+	          this.toggleButton();
+	        }
 	      }
 	      $.ajax({
 	        method: "DELETE",
 	        url: "/users/" + this.state.localUser
-	      }).then(function (data) {
+	      }).then(function (data) {}).catch(function (err) {
+	        console.error(err);
 	        if (!preserveChat) {
-	          _this3.setUsers(null, null, null);
 	          _this3.toggleButton();
 	        }
-	      }).catch(function (err) {
-	        console.error(err);
 	      });
 	    }
 	  }, {
@@ -28465,7 +28465,7 @@
 	            _this2.setState({ messages: _this2.state.messages.reverse().concat([{ body: "Your conversation partner has disconnected.  Please return to the main menu to chat with another user." }]) });
 	            clearInterval(_this2.state.userInterval);
 	            clearInterval(_this2.state.messagesInterval);
-	            _this2.props.exitChat({ preserveChat: true });
+	            _this2.props.exitChat(true, true);
 	          }
 	        });
 	      }, 10000);
@@ -28764,7 +28764,9 @@
 	      { style: { display: "flex", padding: "10px", justifyContent: "space-between" } },
 	      _react2.default.createElement(
 	        'button',
-	        { className: 'chat-input-destroy', onClick: destroySession },
+	        { className: 'chat-input-destroy', onClick: function onClick(e) {
+	            destroySession(e, false);
+	          } },
 	        'Chat with another partner'
 	      ),
 	      _react2.default.createElement(_TranscriptButton2.default, null)

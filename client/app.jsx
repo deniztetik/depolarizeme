@@ -36,25 +36,27 @@ class App extends React.Component {
     })
   }
 
-  exitChat(e) {
-    var preserveChat = false;
+  exitChat(e, preserveChat) {
     if (e) {
       if (e.preventDefault) {
         e.preventDefault();
 
       }
-      preserveChat = !!e.preserveChat;
+      if (!preserveChat) {
+        this.setUsers(null, null, null);
+        this.toggleButton();
+      }
     }
     $.ajax({
       method: "DELETE",
       url: "/users/"+this.state.localUser
     }).then((data) => {
-      if (!preserveChat) {
-        this.setUsers(null, null, null);
-        this.toggleButton();
-      }
+
     }).catch((err) => {
       console.error(err);
+      if (!preserveChat) {
+        this.toggleButton();
+      }
     })
   }
 
